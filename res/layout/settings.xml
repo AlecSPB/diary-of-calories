@@ -1,0 +1,48 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+<LinearLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	android:orientation = "vertical"
+	android:layout_width = "fill_parent"
+	android:layout_height = "fill_parent"
+	android:padding = "10dp"
+	android:background = "#F0F0F0">
+	<TextView
+		style = "@style/title_style"
+		android:background = "@drawable/title"
+		android:text = "@string/settings_activity_name" />
+	<TextView
+		style = "@style/label_style"
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:text = "@string/label9" />
+	<LinearLayout
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:orientation = "horizontal">
+		<EditText
+			android:id = "@+id/maximum_calories_edit"
+			style = "@style/label_style"
+			android:layout_width = "100dp"
+			android:layout_height = "wrap_content"
+			android:lines = "1"
+			android:inputType = "numberDecimal" />
+		<TextView
+			style = "@style/label_style"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:text = "@string/kcal" />
+		<TextView
+			style = "@style/label_style"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:text = "@string/dot" />
+	</LinearLayout>
+	<ImageButton
+		style = "@style/button_style"
+		android:layout_width = "fill_parent"
+		android:layout_height = "75dp"
+		android:background = "@drawable/black_button"
+		android:src = "@drawable/save"
+		android:contentDescription = "@string/save_button"
+		android:onClick = "saveSettings" />
+</LinearLayout>
