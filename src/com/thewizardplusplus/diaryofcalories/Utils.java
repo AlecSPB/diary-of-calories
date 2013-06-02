@@ -3,6 +3,8 @@ package com.thewizardplusplus.diaryofcalories;
 import java.text.NumberFormat;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import android.content.Context;
 import android.content.Intent;
 import android.app.AlertDialog;
@@ -54,20 +56,30 @@ public class Utils {
 	}
 
 	public static void showNotification(Context context, int icon_id, String
-		title, String message)
+		title, String message, long hide_delay, Intent intent)
 	{
-		PendingIntent intent = PendingIntent.getActivity(context, 0, new
-			Intent(), 0);
+		PendingIntent pending_intent = PendingIntent.getActivity(context, 0,
+			intent, 0);
 		Notification notification = new NotificationCompat.Builder(context).
 			setTicker(title).setSmallIcon(icon_id).setContentTitle(title).
-			setContentText(message).setAutoCancel(true).setContentIntent(
-			intent).build();
+			setContentText(message).setContentIntent(pending_intent).build();
 
-		NotificationManager notifications = (NotificationManager)context.
+		final NotificationManager notifications = (NotificationManager)context.
 			getSystemService(Context.NOTIFICATION_SERVICE);
-		notifications.notify(notification_id, notification);
 		notification_id++;
+		notifications.notify(notification_id, notification);
+
+		if (hide_delay > 0) {
+			new Timer(true).schedule(new TimerTask() {
+				@Override
+				public void run() {
+					notifications.cancel(id);
+				}
+
+				private final int id = notification_id; 
+			}, hide_delay);
+		}
 	}
 
-	private static int notification_id = 0;
+	private static int notification_id = -1;
 }

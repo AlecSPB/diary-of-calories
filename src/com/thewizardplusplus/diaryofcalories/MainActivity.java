@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -84,6 +85,8 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
+	private static final long NOTIFICATION_HIDE_DELAY = 15000;
+
 	private TextView     label1;
 	private TextView     current_day_calories;
 	private TextView     current_day_calories_unit;
@@ -95,7 +98,6 @@ public class MainActivity extends Activity {
 	private EditText     weight_edit;
 	private EditText     calories_edit;
 	private ImageButton  cancel_button;
-
 	private DataAccessor data_accessor;
 
 	private void updateUI() {
@@ -171,8 +173,11 @@ public class MainActivity extends Activity {
 			return;
 		}
 
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
 		Utils.showNotification(this, R.drawable.icon, getString(R.string.
 			application_name), String.format(getString(R.string.
-			backup_saved_notification), backup_file.getAbsolutePath()));
+			backup_saved_notification), backup_file.getAbsolutePath()),
+			NOTIFICATION_HIDE_DELAY, intent);
 	}
 }
