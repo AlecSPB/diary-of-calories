@@ -56,13 +56,17 @@ public class Utils {
 	}
 
 	public static void showNotification(Context context, int icon_id, String
-		title, String message, long hide_delay, Intent intent)
+		title, String message, long hide_delay, boolean no_clear, Intent
+		intent, NotificationDeletingProcessor deleting_processor)
 	{
 		PendingIntent pending_intent = PendingIntent.getActivity(context, 0,
 			intent, 0);
 		Notification notification = new NotificationCompat.Builder(context).
 			setTicker(title).setSmallIcon(icon_id).setContentTitle(title).
 			setContentText(message).setContentIntent(pending_intent).build();
+		if (no_clear) {
+			notification.flags |= Notification.FLAG_NO_CLEAR;
+		}
 
 		final NotificationManager notifications = (NotificationManager)context.
 			getSystemService(Context.NOTIFICATION_SERVICE);
@@ -70,13 +74,19 @@ public class Utils {
 		notifications.notify(notification_id, notification);
 
 		if (hide_delay > 0) {
+			final NotificationDeletingProcessor processor = deleting_processor;
 			new Timer(true).schedule(new TimerTask() {
 				@Override
 				public void run() {
-					notifications.cancel(id);
+					if (processor != null) {
+						boolean delete = processor.process();
+						if (delete) {
+							notifications.cancel(id);
+						}
+					}
 				}
 
-				private final int id = notification_id; 
+				private final int id = notification_id;
 			}, hide_delay);
 		}
 	}

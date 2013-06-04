@@ -5,12 +5,15 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Environment;
@@ -58,6 +61,7 @@ public class MainActivity extends Activity {
 				Float.parseFloat(calories));
 			backupHistory();
 			updateUI();
+			updateWidgetUI();
 			weight_edit.setText("");
 			weight_edit.requestFocus();
 			calories_edit.setText("");
@@ -68,6 +72,7 @@ public class MainActivity extends Activity {
 		data_accessor.undoTheLast();
 		backupHistory();
 		updateUI();
+		updateWidgetUI();
 	}
 
 	public void showHistory(View view) {
@@ -99,6 +104,7 @@ public class MainActivity extends Activity {
 	private EditText     calories_edit;
 	private ImageButton  cancel_button;
 	private DataAccessor data_accessor;
+	private int          notification_counter = 0;
 
 	private void updateUI() {
 		DayData current_day_data = data_accessor.getCurrentDayData();
@@ -136,6 +142,51 @@ public class MainActivity extends Activity {
 		} else {
 			cancel_button.setEnabled(false);
 		}
+	}
+
+	private void updateWidgetUI() {
+		RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.widget);
+		ComponentName widget = new ComponentName(this, Widget.class);
+
+		DayData current_day_data = data_accessor.getCurrentDayData();
+
+		double current_day_calories = current_day_data.calories;
+		views.setTextViewText(R.id.current_day_calories, Utils.
+			convertNumberToLocaleFormat(current_day_calories));
+
+		float maximum_calories = data_accessor.getUserSettings().
+			maximum_calories;
+		views.setTextViewText(R.id.maximum_calories, Utils.
+			convertNumberToLocaleFormat(maximum_calories));
+
+		double difference = maximum_calories - current_day_calories;
+		if (current_day_calories <= maximum_calories) {
+			views.setTextColor(R.id.current_day_calories, Color.rgb(0, 0xc0,
+				0));
+			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0,
+				0xc0, 0));
+			views.setViewVisibility(R.id.label3, View.VISIBLE);
+			views.setViewVisibility(R.id.label4, View.GONE);
+			views.setTextColor(R.id.remaining_calories, Color.rgb(0, 0xc0, 0));
+			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0, 0xc0,
+				0));
+		} else {
+			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0,
+				0));
+			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0,
+				0, 0));
+			views.setViewVisibility(R.id.label3, View.GONE);
+			views.setViewVisibility(R.id.label4, View.VISIBLE);
+			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0, 0));
+			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0,
+				0));
+
+			difference = -difference;
+		}
+		views.setTextViewText(R.id.remaining_calories, Utils.
+			convertNumberToLocaleFormat(difference));
+
+		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}
 
 	private void backupHistory() {
@@ -178,6 +229,17 @@ public class MainActivity extends Activity {
 		Utils.showNotification(this, R.drawable.icon, getString(R.string.
 			application_name), String.format(getString(R.string.
 			backup_saved_notification), backup_file.getAbsolutePath()),
-			NOTIFICATION_HIDE_DELAY, intent);
+			NOTIFICATION_HIDE_DELAY, true, intent, new
+			NotificationDeletingProcessor() {
+				public boolean process() {
+					if (notification_counter > 1) {
+						notification_counter--;
+						return true;
+					} else {
+						return false;
+					}
+				}
+			});
+		notification_counter++;
 	}
 }
