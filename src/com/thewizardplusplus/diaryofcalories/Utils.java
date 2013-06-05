@@ -55,26 +55,33 @@ public class Utils {
 		dialog.show();
 	}
 
-	public static void showNotification(Context context, int icon_id, String
-		title, String message, long hide_delay, boolean no_clear, Intent
-		intent, NotificationDeletingProcessor deleting_processor)
+	public static void showNotification(Context context, int notification_id,
+		int icon_id, String title, String message, Intent intent, long
+		hide_delay, NotificationHidingProcessor hiding_processor, boolean
+		ongoing)
 	{
 		PendingIntent pending_intent = PendingIntent.getActivity(context, 0,
 			intent, 0);
 		Notification notification = new NotificationCompat.Builder(context).
 			setTicker(title).setSmallIcon(icon_id).setContentTitle(title).
 			setContentText(message).setContentIntent(pending_intent).build();
-		if (no_clear) {
-			notification.flags |= Notification.FLAG_NO_CLEAR;
+		if (ongoing) {
+			notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		}
 
 		final NotificationManager notifications = (NotificationManager)context.
 			getSystemService(Context.NOTIFICATION_SERVICE);
-		notification_id++;
+		if (notification_id != 0) {
+			notification_id = -Math.abs(notification_id);
+		} else {
+			Utils.notification_id++;
+			notification_id = Utils.notification_id;
+		}
 		notifications.notify(notification_id, notification);
 
-		if (hide_delay > 0) {
-			final NotificationDeletingProcessor processor = deleting_processor;
+		if (hide_delay > 0 && !ongoing) {
+			final NotificationHidingProcessor processor = hiding_processor;
+			final int                         id =        notification_id; 
 			new Timer(true).schedule(new TimerTask() {
 				@Override
 				public void run() {
@@ -83,10 +90,10 @@ public class Utils {
 						if (delete) {
 							notifications.cancel(id);
 						}
+					} else {
+						notifications.cancel(id);
 					}
 				}
-
-				private final int id = notification_id;
 			}, hide_delay);
 		}
 	}

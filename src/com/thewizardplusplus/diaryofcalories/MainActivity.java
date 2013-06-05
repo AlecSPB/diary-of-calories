@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,37 @@ public class MainActivity extends Activity {
 		cancel_button = (ImageButton)findViewById(R.id.cancel_button);
 
 		updateUI();
+
+		File directory = new File(Environment.getExternalStorageDirectory(),
+			HISTORY_BACKUP_DIRECTORY);
+		if (!directory.exists()) {
+			boolean result = directory.mkdir();
+			if (!result) {
+				Utils.showAlertDialog(this, getString(R.string.
+					error_message_box_title), getString(R.string.
+					directory_error_message), AlertType.WARNING);
+				return;
+			}
+		}
+		File backup_file = new File(directory, HISTORY_BACKUP_FILE);
+		try {
+			OutputStream out = new FileOutputStream(backup_file);
+			byte[] bytes_data = data_accessor.getAllDataInXml().getBytes();
+			out.write(bytes_data);
+			out.flush();
+			out.close();
+		} catch (IOException exception) {
+			Utils.showAlertDialog(this, getString(R.string.
+				error_message_box_title), getString(R.string.
+				backup_file_error_message), AlertType.WARNING);
+			return;
+		}
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
+		Utils.showNotification(this, ONGOING_NOTIFICATION_ID, R.drawable.icon,
+			getString(R.string.application_name), String.format(getString(R.
+			string.backup_saved_notification), backup_file.getAbsolutePath()),
+			intent, NOTIFICATION_HIDE_DELAY, null, true);
 	}
 
 	@Override
@@ -90,7 +122,8 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-	private static final long NOTIFICATION_HIDE_DELAY = 15000;
+	private static final long NOTIFICATION_HIDE_DELAY = 2000;
+	private static final int  ONGOING_NOTIFICATION_ID = -1;
 
 	private TextView     label1;
 	private TextView     current_day_calories;
@@ -104,7 +137,6 @@ public class MainActivity extends Activity {
 	private EditText     calories_edit;
 	private ImageButton  cancel_button;
 	private DataAccessor data_accessor;
-	private int          notification_counter = 0;
 
 	private void updateUI() {
 		DayData current_day_data = data_accessor.getCurrentDayData();
@@ -145,8 +177,12 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateWidgetUI() {
-		RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.widget);
-		ComponentName widget = new ComponentName(this, Widget.class);
+		RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.
+			widget);
+
+		Intent intent = new Intent(this, MainActivity.class);
+		views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
+			getActivity(this, 0, intent, 0));
 
 		DayData current_day_data = data_accessor.getCurrentDayData();
 
@@ -186,6 +222,7 @@ public class MainActivity extends Activity {
 		views.setTextViewText(R.id.remaining_calories, Utils.
 			convertNumberToLocaleFormat(difference));
 
+		ComponentName widget = new ComponentName(this, Widget.class);
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}
 
@@ -226,20 +263,9 @@ public class MainActivity extends Activity {
 
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
-		Utils.showNotification(this, R.drawable.icon, getString(R.string.
+		Utils.showNotification(this, 0, R.drawable.icon, getString(R.string.
 			application_name), String.format(getString(R.string.
-			backup_saved_notification), backup_file.getAbsolutePath()),
-			NOTIFICATION_HIDE_DELAY, true, intent, new
-			NotificationDeletingProcessor() {
-				public boolean process() {
-					if (notification_counter > 1) {
-						notification_counter--;
-						return true;
-					} else {
-						return false;
-					}
-				}
-			});
-		notification_counter++;
+			backup_saved_notification), backup_file.getAbsolutePath()), intent,
+			NOTIFICATION_HIDE_DELAY, null, false);
 	}
 }

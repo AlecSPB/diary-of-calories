@@ -23,9 +23,9 @@ public class Widget extends AppWidgetProvider {
 	}
 
 	private void updateUI(Context context, RemoteViews views) {
+		Intent intent = new Intent(context, MainActivity.class);
         views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
-        	getActivity(context, 0, new Intent(context, MainActivity.class),
-        	0));
+        	getActivity(context, 0, intent, 0));
 
 		DayData current_day_data = data_accessor.getCurrentDayData();
 
