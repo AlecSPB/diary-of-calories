@@ -90,7 +90,8 @@ public class DataAccessor {
 		boolean first_loop = true;
 		String old_date = "";
 		while (!cursor.isAfterLast()) {
-			String current_date = cursor.getString(cursor.getColumnIndex("date_field"));
+			String current_date = cursor.getString(cursor.getColumnIndex(
+				"date_field"));
 			if (!current_date.equals(old_date)) {
 				if (!first_loop) {
 					xml += "\t</day>\n";
