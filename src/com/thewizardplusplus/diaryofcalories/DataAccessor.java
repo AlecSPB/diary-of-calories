@@ -88,8 +88,11 @@ public class DataAccessor {
 		cursor.moveToFirst();
 
 		boolean first_loop = true;
+		boolean has_rows = false;
 		String old_date = "";
 		while (!cursor.isAfterLast()) {
+			has_rows = true;
+
 			String current_date = cursor.getString(cursor.getColumnIndex(
 				"date_field"));
 			if (!current_date.equals(old_date)) {
@@ -113,9 +116,10 @@ public class DataAccessor {
 		cursor.close();
 		database.close();
 
-		xml +=
-			"\t</day>\n" +
-			"</history>\n";
+		if (has_rows) {
+			xml += "\t</day>\n";
+		}
+		xml += "</history>\n";
 		return xml;
 	}
 
