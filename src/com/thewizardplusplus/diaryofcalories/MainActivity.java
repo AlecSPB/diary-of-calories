@@ -158,12 +158,14 @@ public class MainActivity extends Activity {
 			this.remaining_calories.setTextColor(Color.rgb(0, 0xc0, 0));
 			this.remaining_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
 		} else {
-			this.current_day_calories.setTextColor(Color.rgb(0xc0, 0, 0));
-			this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0, 0));
+			this.current_day_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+			this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0,
+				0));
 			label3.setVisibility(View.GONE);
 			label4.setVisibility(View.VISIBLE);
-			this.remaining_calories.setTextColor(Color.rgb(0xc0, 0, 0));
-			this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0, 0));
+			this.remaining_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+			this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0,
+				0));
 			difference = -difference;
 		}
 		this.remaining_calories.setText(Utils.convertNumberToLocaleFormat(
