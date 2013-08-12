@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 		this.current_day_calories.setText(Utils.convertNumberToLocaleFormat(
 			current_day_calories));
 		float maximum_calories =
-			data_accessor.getUserSettings().maximum_calories;
+			data_accessor.getUserSettings().soft_limit;
 		this.maximum_calories.setText(Utils.convertNumberToLocaleFormat(
 			maximum_calories));
 		double difference = maximum_calories - current_day_calories;
@@ -191,7 +191,7 @@ public class MainActivity extends Activity {
 			convertNumberToLocaleFormat(current_day_calories));
 
 		float maximum_calories = data_accessor.getUserSettings().
-			maximum_calories;
+			soft_limit;
 		views.setTextViewText(R.id.maximum_calories, Utils.
 			convertNumberToLocaleFormat(maximum_calories));
 

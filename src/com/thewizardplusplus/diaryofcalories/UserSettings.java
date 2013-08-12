@@ -1,13 +1,16 @@
 package com.thewizardplusplus.diaryofcalories;
 
 public class UserSettings {
-	public static final String MAXIMUM_CALORIES_SETTING_NAME =
-		"maximum_calories";
-	public static final float  DEFAULT_MAXIMUM_CALORIES =      2500.0f;
+	public static final String HARD_LIMIT_SETTING_NAME = "hard_limit";
+	public static final String SOFT_LIMIT_SETTING_NAME = "soft_limit";
+	public static final float  DEFAULT_HARD_LIMIT = 2500.0f;
+	public static final float  DEFAULT_SOFT_LIMIT = 1200.0f;
 
-	public float maximum_calories;
+	public float hard_limit;
+	public float soft_limit;
 
 	public UserSettings() {
-		maximum_calories = DEFAULT_MAXIMUM_CALORIES;
+		hard_limit = DEFAULT_HARD_LIMIT;
+		soft_limit = DEFAULT_SOFT_LIMIT;
 	}
 }

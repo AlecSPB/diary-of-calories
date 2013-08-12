@@ -123,9 +123,12 @@ public class DataAccessor {
 		UserSettings settings = new UserSettings();
 		SharedPreferences preferences =
 			PreferenceManager.getDefaultSharedPreferences(context);
-		settings.maximum_calories = preferences.getFloat(
-			UserSettings.MAXIMUM_CALORIES_SETTING_NAME,
-			UserSettings.DEFAULT_MAXIMUM_CALORIES);
+		settings.hard_limit = preferences.getFloat(
+			UserSettings.HARD_LIMIT_SETTING_NAME,
+			UserSettings.DEFAULT_HARD_LIMIT);
+		settings.soft_limit = preferences.getFloat(
+			UserSettings.SOFT_LIMIT_SETTING_NAME,
+			UserSettings.DEFAULT_SOFT_LIMIT);
 		return settings;
 	}
 
@@ -133,8 +136,10 @@ public class DataAccessor {
 		SharedPreferences preferences =
 			PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor preferences_editor = preferences.edit();
-		preferences_editor.putFloat(UserSettings.MAXIMUM_CALORIES_SETTING_NAME,
-			user_settings.maximum_calories);
+		preferences_editor.putFloat(UserSettings.HARD_LIMIT_SETTING_NAME,
+			user_settings.hard_limit);
+		preferences_editor.putFloat(UserSettings.SOFT_LIMIT_SETTING_NAME,
+			user_settings.soft_limit);
 		preferences_editor.commit();
 	}
 

@@ -25,7 +25,7 @@ public class Widget extends AppWidgetProvider {
 	private void updateUI(Context context, RemoteViews views) {
 		Intent intent = new Intent(context, MainActivity.class);
         views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
-        	getActivity(context, 0, intent, 0));
+            getActivity(context, 0, intent, 0));
 
 		DayData current_day_data = data_accessor.getCurrentDayData();
 
@@ -34,7 +34,7 @@ public class Widget extends AppWidgetProvider {
 			convertNumberToLocaleFormat(current_day_calories));
 
 		float maximum_calories = data_accessor.getUserSettings().
-			maximum_calories;
+			soft_limit;
 		views.setTextViewText(R.id.maximum_calories, Utils.
 			convertNumberToLocaleFormat(maximum_calories));
 

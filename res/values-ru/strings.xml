@@ -13,9 +13,10 @@
 	<string name = "label6">* вес:</string>
 	<string name = "label7">&#160;г</string>
 	<string name = "label8">* калорийность на 100 г:</string>
-	<string name = "label9">Максимум калорий:</string>
+	<string name = "label9">Жёсткий лимит:</string>
 	<string name = "label10">Нет данных.</string>
 	<string name = "label11">Среднее значение:</string>
+	<string name = "label12">Мягкий лимит:</string>
 	<string name = "add_button">Добавить</string>
 	<string name = "cancel_button">Отменить последнее</string>
 	<string name = "history_button">История</string>

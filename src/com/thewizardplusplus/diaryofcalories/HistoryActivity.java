@@ -53,13 +53,18 @@ public class HistoryActivity extends Activity {
 				map.put(LIST_ITEM_CONTENT_NAME,
 					Utils.convertNumberToLocaleFormat(day_data.calories) +
 					getString(R.string.kcal));
-				if (day_data.calories <=
-					data_accessor.getUserSettings().maximum_calories)
+				if (day_data.calories > data_accessor.getUserSettings().
+					hard_limit)
+				{
+					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0, 0));
+				} else if (day_data.calories > data_accessor.getUserSettings().
+					soft_limit)
 				{
 					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0xf0,
-						0xf0));
+						0));
 				} else {
-					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0, 0));
+					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0xf0,
+						0xf0));
 				}
 				items.add(map);
 			}
@@ -99,12 +104,21 @@ public class HistoryActivity extends Activity {
 
 			Graph graph2 = new Graph();
 			graph2.data.put(Double.valueOf(0.0), Double.valueOf(
-				(double)data_accessor.getUserSettings().maximum_calories));
+				(double)data_accessor.getUserSettings().soft_limit));
 			graph2.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
 				Double.valueOf((double)data_accessor.getUserSettings()
-				.maximum_calories));
-			graph2.paint.setColor(Color.rgb(0xc0, 0, 0));
+				.soft_limit));
+			graph2.paint.setColor(Color.rgb(0xc0, 0xc0, 0));
 			graphs.add(graph2);
+
+			Graph graph3 = new Graph();
+			graph3.data.put(Double.valueOf(0.0), Double.valueOf(
+				(double)data_accessor.getUserSettings().hard_limit));
+			graph3.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
+				Double.valueOf((double)data_accessor.getUserSettings()
+				.hard_limit));
+			graph3.paint.setColor(Color.rgb(0xc0, 0, 0));
+			graphs.add(graph3);
 
 			graph_view.setData(graphs);
 		} else {

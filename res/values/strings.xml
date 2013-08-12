@@ -15,9 +15,10 @@
 	<string name = "label6">* weight:</string>
 	<string name = "label7">&#160;g</string>
 	<string name = "label8">* calories per 100 g:</string>
-	<string name = "label9">Maximum calories:</string>
+	<string name = "label9">Hard limit:</string>
 	<string name = "label10">No data.</string>
 	<string name = "label11">Mean:</string>
+	<string name = "label12">Soft limit:</string>
 	<string name = "add_button">Add</string>
 	<string name = "cancel_button">Undo the last</string>
 	<string name = "history_button">History</string>
