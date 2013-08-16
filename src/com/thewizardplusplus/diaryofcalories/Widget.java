@@ -24,8 +24,8 @@ public class Widget extends AppWidgetProvider {
 
 	private void updateUI(Context context, RemoteViews views) {
 		Intent intent = new Intent(context, MainActivity.class);
-        views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
-            getActivity(context, 0, intent, 0));
+		views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
+			getActivity(context, 0, intent, 0));
 
 		DayData current_day_data = data_accessor.getCurrentDayData();
 
@@ -50,16 +50,16 @@ public class Widget extends AppWidgetProvider {
 			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0, 0xc0,
 				0));
 		} else {
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0,
+			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0xc0,
 				0));
 			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0,
-				0, 0));
+				0xc0, 0));
 			views.setViewVisibility(R.id.label3, View.GONE);
 			views.setViewVisibility(R.id.label4, View.VISIBLE);
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0,
+			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0xc0,
 				0));
-
+			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0,
+				0xc0, 0));
 			difference = -difference;
 		}
 		views.setTextViewText(R.id.remaining_calories, Utils.
