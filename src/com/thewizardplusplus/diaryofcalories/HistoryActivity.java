@@ -15,11 +15,6 @@ import android.widget.TextView;
 import android.graphics.Color;
 
 public class HistoryActivity extends Activity {
-	public enum ViewMode {
-		LIST,
-		GRAPH
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,11 +48,11 @@ public class HistoryActivity extends Activity {
 				map.put(LIST_ITEM_CONTENT_NAME,
 					Utils.convertNumberToLocaleFormat(day_data.calories) +
 					getString(R.string.kcal));
-				if (day_data.calories > data_accessor.getUserSettings().
+				if (day_data.calories > data_accessor.getSettings().
 					hard_limit)
 				{
 					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0, 0));
-				} else if (day_data.calories > data_accessor.getUserSettings().
+				} else if (day_data.calories > data_accessor.getSettings().
 					soft_limit)
 				{
 					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0xf0,
@@ -104,18 +99,18 @@ public class HistoryActivity extends Activity {
 
 			Graph graph2 = new Graph();
 			graph2.data.put(Double.valueOf(0.0), Double.valueOf(
-				(double)data_accessor.getUserSettings().soft_limit));
+				(double)data_accessor.getSettings().soft_limit));
 			graph2.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
-				Double.valueOf((double)data_accessor.getUserSettings()
+				Double.valueOf((double)data_accessor.getSettings()
 				.soft_limit));
 			graph2.paint.setColor(Color.rgb(0xc0, 0xc0, 0));
 			graphs.add(graph2);
 
 			Graph graph3 = new Graph();
 			graph3.data.put(Double.valueOf(0.0), Double.valueOf(
-				(double)data_accessor.getUserSettings().hard_limit));
+				(double)data_accessor.getSettings().hard_limit));
 			graph3.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
-				Double.valueOf((double)data_accessor.getUserSettings()
+				Double.valueOf((double)data_accessor.getSettings()
 				.hard_limit));
 			graph3.paint.setColor(Color.rgb(0xc0, 0, 0));
 			graphs.add(graph3);
@@ -139,8 +134,8 @@ public class HistoryActivity extends Activity {
 	}
 
 	public void showListView(View view) {
-		if (view_mode == ViewMode.GRAPH) {
-			view_mode = ViewMode.LIST;
+		if (view_mode == HistoryViewMode.GRAPH) {
+			view_mode = HistoryViewMode.LIST;
 
 			Settings settings = new Settings();
 			settings.view_mode = view_mode;
@@ -151,8 +146,8 @@ public class HistoryActivity extends Activity {
 	}
 
 	public void showGraphView(View view) {
-		if (view_mode == ViewMode.LIST) {
-			view_mode = ViewMode.GRAPH;
+		if (view_mode == HistoryViewMode.LIST) {
+			view_mode = HistoryViewMode.GRAPH;
 
 			Settings settings = new Settings();
 			settings.view_mode = view_mode;
@@ -167,7 +162,7 @@ public class HistoryActivity extends Activity {
 	private static final String LIST_ITEM_BACKGROUND_NAME = "background_color";
 
 	private DataAccessor data_accessor;
-	private ViewMode     view_mode;
+	private HistoryViewMode view_mode;
 	private TextView     mean;
 	private ImageButton  list_view_button;
 	private ImageButton  graph_view_button;
@@ -175,14 +170,14 @@ public class HistoryActivity extends Activity {
 	private GraphView    graph_view;
 
 	private void updateUI() {
-		if (view_mode == ViewMode.LIST) {
+		if (view_mode == HistoryViewMode.LIST) {
 			list_view_button.setBackgroundResource(
 				R.drawable.left_black_toggle_button_checked);
 			graph_view_button.setBackgroundResource(
 				R.drawable.right_black_toggle_button);
 			list_view.setVisibility(View.VISIBLE);
 			graph_view.setVisibility(View.GONE);
-		} else if (view_mode == ViewMode.GRAPH) {
+		} else if (view_mode == HistoryViewMode.GRAPH) {
 			list_view_button.setBackgroundResource(
 				R.drawable.left_black_toggle_button);
 			graph_view_button.setBackgroundResource(

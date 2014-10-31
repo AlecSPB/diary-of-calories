@@ -7,8 +7,8 @@ import android.webkit.WebView;
 
 public class AboutActivity extends Activity {
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle saved_instance_state) {
+		super.onCreate(saved_instance_state);
 		setContentView(R.layout.about);
 
 		WebView web_view = (WebView)findViewById(R.id.web_view);

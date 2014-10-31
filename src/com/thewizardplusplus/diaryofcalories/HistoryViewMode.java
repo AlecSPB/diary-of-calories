@@ -1,6 +1,7 @@
 package com.thewizardplusplus.diaryofcalories;
 
-public enum AlertType {
-	INFORMATION,
-	WARNING
+public enum HistoryViewMode {
+	LIST,
+	GRAPH
 }
+

@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 			if (!result) {
 				Utils.showAlertDialog(this, getString(R.string.
 					error_message_box_title), getString(R.string.
-					directory_error_message), AlertType.WARNING);
+					directory_error_message));
 				return;
 			}
 		}
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 		} catch (IOException exception) {
 			Utils.showAlertDialog(this, getString(R.string.
 				error_message_box_title), getString(R.string.
-				backup_file_error_message), AlertType.WARNING);
+				backup_file_error_message));
 			return;
 		}
 		Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
 		Utils.showNotification(this, ONGOING_NOTIFICATION_ID, R.drawable.icon,
 			getString(R.string.application_name), String.format(getString(R.
 			string.backup_saved_notification), backup_file.getAbsolutePath()),
-			intent, NOTIFICATION_HIDE_DELAY, null, true);
+			intent, NOTIFICATION_HIDE_DELAY, true);
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 		this.current_day_calories.setText(Utils.convertNumberToLocaleFormat(
 			current_day_calories));
 		float maximum_calories =
-			data_accessor.getUserSettings().soft_limit;
+			data_accessor.getSettings().soft_limit;
 		this.maximum_calories.setText(Utils.convertNumberToLocaleFormat(
 			maximum_calories));
 		double difference = maximum_calories - current_day_calories;
@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
 		views.setTextViewText(R.id.current_day_calories, Utils.
 			convertNumberToLocaleFormat(current_day_calories));
 
-		float maximum_calories = data_accessor.getUserSettings().
+		float maximum_calories = data_accessor.getSettings().
 			soft_limit;
 		views.setTextViewText(R.id.maximum_calories, Utils.
 			convertNumberToLocaleFormat(maximum_calories));
@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
 		if (!Environment.MEDIA_MOUNTED.equals(storage_state)) {
 			Utils.showAlertDialog(this, getString(R.string.
 				error_message_box_title), getString(R.string.
-				external_storage_error_message), AlertType.WARNING);
+				external_storage_error_message));
 			return;
 		}
 
@@ -244,7 +244,7 @@ public class MainActivity extends Activity {
 			if (!result) {
 				Utils.showAlertDialog(this, getString(R.string.
 					error_message_box_title), getString(R.string.
-					directory_error_message), AlertType.WARNING);
+					directory_error_message));
 				return;
 			}
 		}
@@ -259,7 +259,7 @@ public class MainActivity extends Activity {
 		} catch (IOException exception) {
 			Utils.showAlertDialog(this, getString(R.string.
 				error_message_box_title), getString(R.string.
-				backup_file_error_message), AlertType.WARNING);
+				backup_file_error_message));
 			return;
 		}
 
@@ -268,6 +268,6 @@ public class MainActivity extends Activity {
 		Utils.showNotification(this, 0, R.drawable.icon, getString(R.string.
 			application_name), String.format(getString(R.string.
 			backup_saved_notification), backup_file.getAbsolutePath()), intent,
-			NOTIFICATION_HIDE_DELAY, null, false);
+			NOTIFICATION_HIDE_DELAY, false);
 	}
 }

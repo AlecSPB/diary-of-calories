@@ -123,37 +123,25 @@ public class DataAccessor {
 		return xml;
 	}
 
-	public UserSettings getUserSettings() {
-		UserSettings settings = new UserSettings();
-		SharedPreferences preferences =
-			PreferenceManager.getDefaultSharedPreferences(context);
-		settings.hard_limit = preferences.getFloat(
-			UserSettings.HARD_LIMIT_SETTING_NAME,
-			UserSettings.DEFAULT_HARD_LIMIT);
-		settings.soft_limit = preferences.getFloat(
-			UserSettings.SOFT_LIMIT_SETTING_NAME,
-			UserSettings.DEFAULT_SOFT_LIMIT);
-		return settings;
-	}
-
-	public void setUserSettings(UserSettings user_settings) {
-		SharedPreferences preferences =
-			PreferenceManager.getDefaultSharedPreferences(context);
-		SharedPreferences.Editor preferences_editor = preferences.edit();
-		preferences_editor.putFloat(UserSettings.HARD_LIMIT_SETTING_NAME,
-			user_settings.hard_limit);
-		preferences_editor.putFloat(UserSettings.SOFT_LIMIT_SETTING_NAME,
-			user_settings.soft_limit);
-		preferences_editor.commit();
-	}
-
 	public Settings getSettings() {
 		Settings settings = new Settings();
 		SharedPreferences preferences =
 			PreferenceManager.getDefaultSharedPreferences(context);
-		settings.view_mode = HistoryActivity.ViewMode.valueOf(
-			preferences.getString(Settings.VIEW_MODE_SETTING_NAME,
-			Settings.DEFAULT_VIEW_MODE.toString()));
+		settings.view_mode = HistoryViewMode.valueOf(
+			preferences.getString(
+				Settings.VIEW_MODE_SETTING_NAME,
+				Settings.DEFAULT_VIEW_MODE.toString()
+			)
+		);
+		settings.hard_limit = preferences.getFloat(
+			Settings.HARD_LIMIT_SETTING_NAME,
+			Settings.DEFAULT_HARD_LIMIT
+		);
+		settings.soft_limit = preferences.getFloat(
+			Settings.SOFT_LIMIT_SETTING_NAME,
+			Settings.DEFAULT_SOFT_LIMIT
+		);
+
 		return settings;
 	}
 
@@ -161,8 +149,18 @@ public class DataAccessor {
 		SharedPreferences preferences =
 			PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor preferences_editor = preferences.edit();
-		preferences_editor.putString(Settings.VIEW_MODE_SETTING_NAME,
-			settings.view_mode.toString());
+		preferences_editor.putString(
+			Settings.VIEW_MODE_SETTING_NAME,
+			settings.view_mode.toString()
+		);
+		preferences_editor.putFloat(
+			Settings.HARD_LIMIT_SETTING_NAME,
+			settings.hard_limit
+		);
+		preferences_editor.putFloat(
+			Settings.SOFT_LIMIT_SETTING_NAME,
+			settings.soft_limit
+		);
 		preferences_editor.commit();
 	}
 
