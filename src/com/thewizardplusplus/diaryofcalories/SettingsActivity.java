@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity {
 			}
 			data_accessor.setSettings(setting);
 
-			updateWidgetUI();
+			updateWidget();
 			finish();
 		}
 	}
@@ -52,58 +52,8 @@ public class SettingsActivity extends Activity {
 	private EditText hard_limit_edit;
 	private EditText soft_limit_edit;
 
-	private void updateWidgetUI() {
-		RemoteViews views = new RemoteViews(
-			this.getPackageName(),
-			R.layout.widget
-		);
-
-		Intent intent = new Intent(this, MainActivity.class);
-		views.setOnClickPendingIntent(
-			R.id.widget_container,
-			PendingIntent.getActivity(this, 0, intent, 0)
-		);
-
-		DataAccessor data_accessor = DataAccessor.getInstance(this);
-		DayData current_day_data = data_accessor.getCurrentDayData();
-
-		double current_day_calories = current_day_data.calories;
-		views.setTextViewText(
-			R.id.current_day_calories,
-			Utils.convertNumberToLocaleFormat(current_day_calories)
-		);
-
-		float maximum_calories = data_accessor
-			.getSettings()
-			.soft_limit;
-		views.setTextViewText(
-			R.id.maximum_calories,
-			Utils.convertNumberToLocaleFormat(maximum_calories)
-		);
-
-		double difference = maximum_calories - current_day_calories;
-		if (current_day_calories <= maximum_calories) {
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0, 0xc0, 0));
-			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0, 0xc0, 0));
-			views.setViewVisibility(R.id.label3, View.VISIBLE);
-			views.setViewVisibility(R.id.label4, View.GONE);
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0, 0xc0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0, 0xc0, 0));
-		} else {
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0, 0, 0));
-			views.setViewVisibility(R.id.label3, View.GONE);
-			views.setViewVisibility(R.id.label4, View.VISIBLE);
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0, 0));
-
-			difference = -difference;
-		}
-		views.setTextViewText(
-			R.id.remaining_calories,
-			Utils.convertNumberToLocaleFormat(difference)
-		);
-
+	private void updateWidget() {
+		RemoteViews views = Widget.getUpdatedViews(this);
 		ComponentName widget = new ComponentName(this, Widget.class);
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}

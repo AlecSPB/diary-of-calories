@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 		calories_edit = (EditText)findViewById(R.id.calories_edit);
 		cancel_button = (ImageButton)findViewById(R.id.cancel_button);
 
-		updateUI();
+		updateUi();
 
 		File directory = new File(Environment.getExternalStorageDirectory(),
 			HISTORY_BACKUP_DIRECTORY);
@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		updateUI();
+		updateUi();
 	}
 
 	public void addData(View view) {
@@ -92,8 +92,8 @@ public class MainActivity extends Activity {
 			data_accessor.addData(Float.parseFloat(weight),
 				Float.parseFloat(calories));
 			backupHistory();
-			updateUI();
-			updateWidgetUI();
+			updateUi();
+			updateWidget();
 			weight_edit.setText("");
 			weight_edit.requestFocus();
 			calories_edit.setText("");
@@ -103,8 +103,8 @@ public class MainActivity extends Activity {
 	public void undoTheLast(View view) {
 		data_accessor.undoTheLast();
 		backupHistory();
-		updateUI();
-		updateWidgetUI();
+		updateUi();
+		updateWidget();
 	}
 
 	public void showHistory(View view) {
@@ -138,92 +138,72 @@ public class MainActivity extends Activity {
 	private ImageButton  cancel_button;
 	private DataAccessor data_accessor;
 
-	private void updateUI() {
+	private void updateUi() {
 		DayData current_day_data = data_accessor.getCurrentDayData();
 		double current_day_calories = current_day_data.calories;
-		label1.setText(String.format(getString(R.string.label1),
-			Utils.convertDateToLocaleFormat(current_day_data.date)));
-		this.current_day_calories.setText(Utils.convertNumberToLocaleFormat(
-			current_day_calories));
-		float maximum_calories =
-			data_accessor.getSettings().soft_limit;
-		this.maximum_calories.setText(Utils.convertNumberToLocaleFormat(
-			maximum_calories));
-		double difference = maximum_calories - current_day_calories;
-		if (current_day_calories <= maximum_calories) {
-			this.current_day_calories.setTextColor(Color.rgb(0, 0xc0, 0));
-			this.current_day_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+
+		label1.setText(
+			String.format(getString(R.string.label1),
+			Utils.convertDateToLocaleFormat(current_day_data.date))
+		);
+		this.current_day_calories.setText(
+			Utils.convertNumberToLocaleFormat(current_day_calories)
+		);
+
+		float soft_limit = data_accessor
+			.getSettings()
+			.soft_limit;
+		float hard_limit = data_accessor
+			.getSettings()
+			.hard_limit;
+		double maximum_calories = 0.0;
+		double difference = 0.0;
+		if (current_day_calories <= hard_limit) {
 			label3.setVisibility(View.VISIBLE);
 			label4.setVisibility(View.GONE);
-			this.remaining_calories.setTextColor(Color.rgb(0, 0xc0, 0));
-			this.remaining_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+
+			if (current_day_calories <= soft_limit) {
+				maximum_calories = soft_limit;
+
+				this.current_day_calories.setTextColor(Color.rgb(0, 0xc0, 0));
+				this.current_day_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+				this.remaining_calories.setTextColor(Color.rgb(0, 0xc0, 0));
+				this.remaining_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+			} else {
+				maximum_calories = hard_limit;
+
+				this.current_day_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+				this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+				this.remaining_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+				this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+			}
+
+			difference = maximum_calories - current_day_calories;
 		} else {
-			this.current_day_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
-			this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0,
-				0));
+			maximum_calories = hard_limit;
+			difference = current_day_calories - maximum_calories;
+
 			label3.setVisibility(View.GONE);
 			label4.setVisibility(View.VISIBLE);
-			this.remaining_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
-			this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0,
-				0));
-			difference = -difference;
-		}
-		this.remaining_calories.setText(Utils.convertNumberToLocaleFormat(
-			difference));
 
-		if (data_accessor.getNumberOfCurrentDayData() > 0) {
-			cancel_button.setEnabled(true);
-		} else {
-			cancel_button.setEnabled(false);
+			this.current_day_calories.setTextColor(Color.rgb(0xc0, 0, 0));
+			this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0, 0));
+			this.remaining_calories.setTextColor(Color.rgb(0xc0, 0, 0));
+			this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0, 0));
 		}
+
+		this.maximum_calories.setText(
+			Utils.convertNumberToLocaleFormat(maximum_calories)
+		);
+		this.remaining_calories.setText(
+			Utils.convertNumberToLocaleFormat(difference)
+		);
+
+		cancel_button.setEnabled(data_accessor.getNumberOfCurrentDayData() > 0);
 	}
 
-	private void updateWidgetUI() {
-		RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.
-			widget);
-
-		Intent intent = new Intent(this, MainActivity.class);
-		views.setOnClickPendingIntent(R.id.widget_container, PendingIntent.
-			getActivity(this, 0, intent, 0));
-
-		DayData current_day_data = data_accessor.getCurrentDayData();
-
-		double current_day_calories = current_day_data.calories;
-		views.setTextViewText(R.id.current_day_calories, Utils.
-			convertNumberToLocaleFormat(current_day_calories));
-
-		float maximum_calories = data_accessor.getSettings().
-			soft_limit;
-		views.setTextViewText(R.id.maximum_calories, Utils.
-			convertNumberToLocaleFormat(maximum_calories));
-
-		double difference = maximum_calories - current_day_calories;
-		if (current_day_calories <= maximum_calories) {
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0, 0xc0,
-				0));
-			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0,
-				0xc0, 0));
-			views.setViewVisibility(R.id.label3, View.VISIBLE);
-			views.setViewVisibility(R.id.label4, View.GONE);
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0, 0xc0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0, 0xc0,
-				0));
-		} else {
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0,
-				0));
-			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0,
-				0, 0));
-			views.setViewVisibility(R.id.label3, View.GONE);
-			views.setViewVisibility(R.id.label4, View.VISIBLE);
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0,
-				0));
-
-			difference = -difference;
-		}
-		views.setTextViewText(R.id.remaining_calories, Utils.
-			convertNumberToLocaleFormat(difference));
-
+	private void updateWidget() {
+		RemoteViews views = Widget.getUpdatedViews(this);
 		ComponentName widget = new ComponentName(this, Widget.class);
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}
