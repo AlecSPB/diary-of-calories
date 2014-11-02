@@ -13,113 +13,132 @@ public class DataAccessor {
 		if (instance == null) {
 			instance = new DataAccessor(context);
 		}
+
 		return instance;
 	}
 
 	public int getNumberOfCurrentDayData() {
-		SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-		Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM " +
-			CustomizedSQLiteHelper.TABLE_NAME + " WHERE (SELECT date(" +
-			CustomizedSQLiteHelper.COLUMN_DATE + ")) = " + "(SELECT date(" +
-			"'now', 'localtime'))", null);
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+
+		Cursor cursor = database.rawQuery(
+			"SELECT COUNT(*)"
+			+ "FROM day_data_list "
+			+ "WHERE"
+				+ "(SELECT date(date))"
+				+ "= (SELECT date('now', 'localtime'))",
+			null
+		);
+
 		cursor.moveToFirst();
 		int number = cursor.getInt(0);
 		cursor.close();
+
 		database.close();
 		return number;
 	}
 
 	public DayData getCurrentDayData() {
-		SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-		Cursor cursor = database.rawQuery("SELECT (SELECT date('now', " +
-			"'localtime')) AS 'date_field', SUM(" +
-			CustomizedSQLiteHelper.COLUMN_WEIGHT + " / 100.0 * " +
-			CustomizedSQLiteHelper.COLUMN_CALORIES + ") AS 'calories' FROM " +
-			CustomizedSQLiteHelper.TABLE_NAME + " WHERE (SELECT date(" +
-			CustomizedSQLiteHelper.COLUMN_DATE + ")) = (SELECT date('now',"
-			+ " 'localtime'))", null);
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+
+		Cursor cursor = database.rawQuery(
+			"SELECT"
+				+ "(SELECT date('now', 'localtime')),"
+				+ "SUM(weight * calories / 100.0)"
+			+ "FROM day_data_list "
+			+ "WHERE"
+				+ "(SELECT date(date))"
+				+ "= (SELECT date('now', 'localtime'))",
+			null
+		);
+
 		cursor.moveToFirst();
 		DayData day_data = new DayData();
-		day_data.date = cursor.getString(cursor.getColumnIndex("date_field"));
-		day_data.calories = cursor.getDouble(cursor.getColumnIndex(
-			"calories"));
+		day_data.date = cursor.getString(0);
+		day_data.calories = cursor.getDouble(1);
 		cursor.close();
+
 		database.close();
 		return day_data;
 	}
 
 	public List<DayData> getAllDaysData() {
-		List<DayData> day_data_list = new ArrayList<DayData>();
-		SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-		Cursor cursor = database.rawQuery("SELECT (SELECT date(" +
-			CustomizedSQLiteHelper.COLUMN_DATE + ")) AS 'date_field', SUM(" +
-			CustomizedSQLiteHelper.COLUMN_WEIGHT + " / 100.0 * " +
-			CustomizedSQLiteHelper.COLUMN_CALORIES + ") AS 'calories' FROM " +
-			CustomizedSQLiteHelper.TABLE_NAME + " GROUP BY (SELECT date(" +
-			CustomizedSQLiteHelper.COLUMN_DATE + ")) ORDER BY date_field DESC",
-			null);
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+
+		Cursor cursor = database.rawQuery(
+			"SELECT"
+				+ "(SELECT date(date)) AS 'date_field',"
+				+ "SUM(weight * calories / 100.0)"
+			+ "FROM day_data_list "
+			+ "GROUP BY (SELECT date(date))"
+			+ "ORDER BY date_field DESC",
+			null
+		);
+
 		cursor.moveToFirst();
+		List<DayData> day_data_list = new ArrayList<DayData>();
 		while (!cursor.isAfterLast()) {
 			DayData day_data = new DayData();
-			day_data.date = cursor.getString(cursor.getColumnIndex(
-				"date_field"));
-			day_data.calories = cursor.getDouble(cursor.getColumnIndex(
-				"calories"));
+			day_data.date = cursor.getString(0);
+			day_data.calories = cursor.getDouble(1);
 			day_data_list.add(day_data);
+
 			cursor.moveToNext();
 		}
 		cursor.close();
+
 		database.close();
 		return day_data_list;
 	}
 
 	public String getAllDataInXml() {
-		String xml =
-			"<?xml version = \"1.0\" encoding = \"utf-8\" ?>\n" +
-			"<!-- Backup of history from application Diary of calories. -->\n" +
-			"<history>\n";
+		SQLiteDatabase database = database_helper.getWritableDatabase();
 
-		SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-		Cursor cursor = database.rawQuery("SELECT " + CustomizedSQLiteHelper.
-			COLUMN_WEIGHT + ", " + CustomizedSQLiteHelper.COLUMN_CALORIES + 
-			", (SELECT date(" + CustomizedSQLiteHelper.COLUMN_DATE + ")) AS " +
-			"'date_field' FROM " + CustomizedSQLiteHelper.TABLE_NAME + " ORDER"
-			+ " BY date_field DESC", null);
+		Cursor cursor = database.rawQuery(
+			"SELECT "
+				+ "_id,"
+				+ "weight,"
+				+ "calories,"
+				+ "(SELECT date(date)) AS 'date_field'"
+			+ "FROM day_data_list "
+			+ "ORDER BY date_field, _id",
+			null
+		);
+
 		cursor.moveToFirst();
+		String xml =
+			"<?xml version = \"1.0\" encoding = \"utf-8\" ?>\n"
+			+ "<history>\n";
 
-		boolean first_loop = true;
 		boolean has_rows = false;
-		String old_date = "";
+		boolean not_first_loop = false;
+		String last_date = "";
 		while (!cursor.isAfterLast()) {
-			has_rows = true;
-
-			String current_date = cursor.getString(cursor.getColumnIndex(
-				"date_field"));
-			if (!current_date.equals(old_date)) {
-				if (!first_loop) {
+			String current_date = cursor.getString(3);
+			if (!current_date.equals(last_date)) {
+				if (not_first_loop) {
 					xml += "\t</day>\n";
 				}
 				xml += "\t<day date = \"" + current_date + "\">\n";
 
-				old_date = current_date;
+				last_date = current_date;
 			}
 
-			xml += "\t\t<food weight = \"" + cursor.getString(cursor.
-				getColumnIndex(CustomizedSQLiteHelper.COLUMN_WEIGHT)) + "\" " +
-				"calories = \"" + cursor.getString(cursor.getColumnIndex(
-				CustomizedSQLiteHelper.COLUMN_CALORIES)) + "\" />\n";
+			xml += "\t\t<food "
+				+ "weight = \"" + cursor.getString(1) + "\" "
+				+ "calories = \"" + cursor.getString(2) + "\" />\n";
 
+			has_rows = true;
+			not_first_loop = true;
 			cursor.moveToNext();
-			first_loop = false;
 		}
-
-		cursor.close();
-		database.close();
 
 		if (has_rows) {
 			xml += "\t</day>\n";
 		}
 		xml += "</history>\n";
+		cursor.close();
+
+		database.close();
 		return xml;
 	}
 
@@ -165,37 +184,44 @@ public class DataAccessor {
 	}
 
 	public void addData(float weight, float calories) {
-		SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-		database.execSQL("INSERT INTO " + CustomizedSQLiteHelper.TABLE_NAME +
-			" (" + CustomizedSQLiteHelper.COLUMN_ID + ", " +
-			CustomizedSQLiteHelper.COLUMN_WEIGHT + ", " +
-			CustomizedSQLiteHelper.COLUMN_CALORIES + ", " +
-			CustomizedSQLiteHelper.COLUMN_DATE + ") VALUES (NULL, " +
-			String.valueOf(weight) + ", " + String.valueOf(calories) + ", " +
-			"(SELECT datetime('now', 'localtime')))");
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+		database.execSQL(
+			"INSERT INTO day_data_list"
+				+ "(weight, calories, date)"
+			+ "VALUES ("
+				+ String.valueOf(weight) + ","
+				+ String.valueOf(calories) + ","
+				+ "(SELECT datetime('now', 'localtime'))"
+			+ ")"
+		);
 		database.close();
 	}
 
 	public void undoTheLast() {
-		if (getNumberOfCurrentDayData() > 0) {
-			SQLiteDatabase database = sqlite_helper.getWritableDatabase();
-			database.execSQL(
-				"DELETE FROM " + CustomizedSQLiteHelper.TABLE_NAME + " WHERE "
-				+ "(SELECT datetime(" + CustomizedSQLiteHelper.COLUMN_DATE +
-				")) = (SELECT MAX(date_and_time) FROM (SELECT datetime(" +
-				CustomizedSQLiteHelper.COLUMN_DATE + ") AS 'date_and_time' " +
-				"FROM " + CustomizedSQLiteHelper.TABLE_NAME + "))");
-			database.close();
+		if (getNumberOfCurrentDayData() <= 0) {
+			return;
 		}
+
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+		database.execSQL(
+			"DELETE FROM day_data_list "
+			+ "WHERE"
+				+ "(SELECT datetime(date))"
+				+ "= ("
+					+ "SELECT MAX((SELECT datetime(date)))"
+					+ "FROM day_data_list"
+				+ ")"
+		);
+		database.close();
 	}
 
-	private static DataAccessor    instance;
+	private static DataAccessor instance;
 
-	private Context                context;
-	private CustomizedSQLiteHelper sqlite_helper;
+	private Context context;
+	private DatabaseHelper database_helper;
 
 	private DataAccessor(Context context) {
-		this.context =  context;
-		sqlite_helper = new CustomizedSQLiteHelper(context);
+		this.context = context;
+		database_helper = new DatabaseHelper(context);
 	}
 }
