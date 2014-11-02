@@ -17,38 +17,36 @@ public class SettingsActivity extends Activity {
 		super.onCreate(saved_instance_state);
 		setContentView(R.layout.settings);
 
-		data_accessor = DataAccessor.getInstance(this);
+		DataAccessor data_accessor = DataAccessor.getInstance(this);
+		Settings settings = data_accessor.getSettings();
 
 		hard_limit_edit = (EditText)findViewById(R.id.hard_limit_edit);
-		hard_limit_edit.setText(
-			Float.toString(data_accessor.getSettings().hard_limit)
-		);
+		hard_limit_edit.setText(Float.toString(settings.hard_limit));
 
 		soft_limit_edit = (EditText)findViewById(R.id.soft_limit_edit);
-		soft_limit_edit.setText(
-			Float.toString(data_accessor.getSettings().soft_limit)
-		);
+		soft_limit_edit.setText(Float.toString(settings.soft_limit));
 	}
 
 	public void saveSettings(View view) {
 		String hard_limit = hard_limit_edit.getText().toString();
 		String soft_limit = soft_limit_edit.getText().toString();
 		if (hard_limit.length() != 0 || soft_limit.length() != 0) {
-			Settings setting = data_accessor.getSettings();
+			DataAccessor data_accessor = DataAccessor.getInstance(this);
+			Settings settings = data_accessor.getSettings();
+
 			if (hard_limit.length() != 0) {
-				setting.hard_limit = Float.parseFloat(hard_limit);
+				settings.hard_limit = Float.parseFloat(hard_limit);
 			}
 			if (soft_limit.length() != 0) {
-				setting.soft_limit = Float.parseFloat(soft_limit);
+				settings.soft_limit = Float.parseFloat(soft_limit);
 			}
-			data_accessor.setSettings(setting);
+			data_accessor.setSettings(settings);
 
 			updateWidget();
 			finish();
 		}
 	}
 
-	private DataAccessor data_accessor;
 	private EditText hard_limit_edit;
 	private EditText soft_limit_edit;
 

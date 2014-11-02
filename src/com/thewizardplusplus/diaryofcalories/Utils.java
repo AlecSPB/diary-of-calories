@@ -59,9 +59,9 @@ public class Utils {
 		String title,
 		String message,
 		Intent intent,
-		long hide_delay,
-		boolean ongoing)
-	{
+		NotificationType type,
+		long hide_delay
+	) {
 		PendingIntent pending_intent = PendingIntent.getActivity(
 			context,
 			0,
@@ -75,7 +75,7 @@ public class Utils {
 			.setContentText(message)
 			.setContentIntent(pending_intent)
 			.build();
-		if (ongoing) {
+		if (type == NotificationType.ONGOING) {
 			notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		}
 
@@ -90,7 +90,7 @@ public class Utils {
 		}
 		notifications.notify(notification_id, notification);
 
-		if (hide_delay > 0 && !ongoing) {
+		if (type == NotificationType.HIDDING && hide_delay > 0) {
 			final int id = notification_id; 
 			new Timer(true).schedule(
 				new TimerTask() {
