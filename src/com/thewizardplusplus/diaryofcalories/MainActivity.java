@@ -28,8 +28,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		data_accessor = DataAccessor.getInstance(this);
-
 		label1 = (TextView)findViewById(R.id.label1);
 		current_day_calories = (TextView)findViewById(
 			R.id.current_day_calories
@@ -62,6 +60,7 @@ public class MainActivity extends Activity {
 		String weight = weight_edit.getText().toString();
 		String calories = calories_edit.getText().toString();
 		if (weight.length() != 0 && calories.length() != 0) {
+			DataAccessor data_accessor = DataAccessor.getInstance(this);
 			data_accessor.addData(
 				Float.parseFloat(weight),
 				Float.parseFloat(calories)
@@ -78,6 +77,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void undoTheLast(View view) {
+		DataAccessor data_accessor = DataAccessor.getInstance(this);
 		data_accessor.undoTheLast();
 		backupHistory(NotificationType.HIDDING);
 
@@ -106,7 +106,6 @@ public class MainActivity extends Activity {
 	private static final long NOTIFICATION_HIDE_DELAY = 2000;
 	private static final int ONGOING_NOTIFICATION_ID = -1;
 
-	private DataAccessor data_accessor;
 	private TextView label1;
 	private TextView current_day_calories;
 	private TextView current_day_calories_unit;
@@ -120,6 +119,7 @@ public class MainActivity extends Activity {
 	private ImageButton cancel_button;
 
 	private void updateUi() {
+		DataAccessor data_accessor = DataAccessor.getInstance(this);
 		DayData current_day_data = data_accessor.getCurrentDayData();
 		double current_day_calories = current_day_data.calories;
 
@@ -234,6 +234,8 @@ public class MainActivity extends Activity {
 				out = new BufferedOutputStream(
 					new FileOutputStream(backup_file)
 				);
+
+				DataAccessor data_accessor = DataAccessor.getInstance(this);
 				String xml = data_accessor.getAllDataInXml();
 				out.write(xml.getBytes());
 			} finally {

@@ -13,29 +13,28 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.graphics.Color;
+import android.content.*;
 
 public class HistoryActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		data_accessor = DataAccessor.getInstance(this);
-		view_mode = data_accessor.getSettings().view_mode;
-
 		setContentView(R.layout.history);
+
 		mean = (TextView)findViewById(R.id.mean);
 		list_view_button = (ImageButton)findViewById(R.id.list_view_button);
 		graph_view_button = (ImageButton)findViewById(R.id.graph_view_button);
 		list_view = (ListView)findViewById(R.id.list_view);
 		graph_view = (GraphView)findViewById(R.id.graph_view);
-		GridSettings graph_render_settings = graph_view.getGridSettings();
-		graph_render_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
-		graph_render_settings.graph_paint.setStrokeWidth(3);
-		graph_render_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
 
-		updateUI();
-
+		DataAccessor data_accessor = DataAccessor.getInstance(this);
 		List<DayData> all_days_data = data_accessor.getAllDaysData();
 		if (all_days_data.size() > 0) {
+			GridSettings graph_render_settings = graph_view.getGridSettings();
+			graph_render_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
+			graph_render_settings.graph_paint.setStrokeWidth(3);
+			graph_render_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
+
 			List<Map<String, Object>> items = new ArrayList<Map<String,
 				Object>>();
 			double mean = 0.0;
@@ -119,6 +118,7 @@ public class HistoryActivity extends Activity {
 		} else {
 			TextView label10 = (TextView)findViewById(R.id.label10);
 			label10.setVisibility(View.VISIBLE);
+
 			TextView label11 = (TextView)findViewById(R.id.label11);
 			label11.setVisibility(View.GONE);
 			mean.setVisibility(View.GONE);
@@ -126,62 +126,75 @@ public class HistoryActivity extends Activity {
 			label13.setVisibility(View.GONE);
 			TextView label14 = (TextView)findViewById(R.id.label14);
 			label14.setVisibility(View.GONE);
+
 			list_view_button.setVisibility(View.GONE);
 			graph_view_button.setVisibility(View.GONE);
+
 			list_view.setVisibility(View.GONE);
 			graph_view.setVisibility(View.GONE);
 		}
+
+		Settings settings = data_accessor.getSettings();
+		view_mode = settings.view_mode;
+		updateUi();
 	}
 
 	public void showListView(View view) {
-		if (view_mode == HistoryViewMode.GRAPH) {
-			view_mode = HistoryViewMode.LIST;
-
-			Settings settings = new Settings();
-			settings.view_mode = view_mode;
-			data_accessor.setSettings(settings);
-
-			updateUI();
-		}
+		changeView(HistoryViewMode.LIST);
 	}
 
 	public void showGraphView(View view) {
-		if (view_mode == HistoryViewMode.LIST) {
-			view_mode = HistoryViewMode.GRAPH;
-
-			Settings settings = new Settings();
-			settings.view_mode = view_mode;
-			data_accessor.setSettings(settings);
-
-			updateUI();
-		}
+		changeView(HistoryViewMode.GRAPH);
 	}
 
 	private static final String LIST_ITEM_TITLE_NAME =      "date";
 	private static final String LIST_ITEM_CONTENT_NAME =    "calories";
 	private static final String LIST_ITEM_BACKGROUND_NAME = "background_color";
 
-	private DataAccessor data_accessor;
 	private HistoryViewMode view_mode;
-	private TextView     mean;
-	private ImageButton  list_view_button;
-	private ImageButton  graph_view_button;
-	private ListView     list_view;
-	private GraphView    graph_view;
+	private TextView mean;
+	private ImageButton list_view_button;
+	private ImageButton graph_view_button;
+	private ListView list_view;
+	private GraphView graph_view;
 
-	private void updateUI() {
+	private void changeView(HistoryViewMode view_mode) {
+		if (this.view_mode == view_mode) {
+			return;
+		}
+
+		this.view_mode = view_mode;
+		saveViewModeInSettings();
+		updateUi();
+	}
+
+	private void saveViewModeInSettings() {
+		DataAccessor data_accessor = DataAccessor.getInstance(this);
+		Settings settings = data_accessor.getSettings();
+
+		settings.view_mode = view_mode;
+		data_accessor.setSettings(settings);
+	}
+
+	private void updateUi() {
 		if (view_mode == HistoryViewMode.LIST) {
 			list_view_button.setBackgroundResource(
-				R.drawable.left_black_toggle_button_checked);
+				R.drawable.left_black_toggle_button_checked
+			);
 			graph_view_button.setBackgroundResource(
-				R.drawable.right_black_toggle_button);
+				R.drawable.right_black_toggle_button
+			);
+
 			list_view.setVisibility(View.VISIBLE);
 			graph_view.setVisibility(View.GONE);
 		} else if (view_mode == HistoryViewMode.GRAPH) {
 			list_view_button.setBackgroundResource(
-				R.drawable.left_black_toggle_button);
+				R.drawable.left_black_toggle_button
+			);
 			graph_view_button.setBackgroundResource(
-				R.drawable.right_black_toggle_button_checked);
+				R.drawable.right_black_toggle_button_checked
+			);
+
 			list_view.setVisibility(View.GONE);
 			graph_view.setVisibility(View.VISIBLE);
 		}
