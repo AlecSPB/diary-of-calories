@@ -30,59 +30,85 @@ public class HistoryActivity extends Activity {
 		DataAccessor data_accessor = DataAccessor.getInstance(this);
 		List<DayData> all_days_data = data_accessor.getAllDaysData();
 		if (all_days_data.size() > 0) {
-			GridSettings graph_render_settings = graph_view.getGridSettings();
-			graph_render_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
-			graph_render_settings.graph_paint.setStrokeWidth(3);
-			graph_render_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
-
-			List<Map<String, Object>> items = new ArrayList<Map<String,
-				Object>>();
+			List<Map<String, Object>> items = new ArrayList<
+				Map<String, Object>
+			>();
 			double mean = 0.0;
 			for (DayData day_data: all_days_data) {
 				mean += day_data.calories;
 
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put(LIST_ITEM_TITLE_NAME, Utils.convertDateToLocaleFormat(
-					day_data.date));
-				map.put(LIST_ITEM_CONTENT_NAME,
-					Utils.convertNumberToLocaleFormat(day_data.calories) +
-					getString(R.string.kcal));
-				if (day_data.calories > data_accessor.getSettings().
-					hard_limit)
-				{
-					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0, 0));
-				} else if (day_data.calories > data_accessor.getSettings().
-					soft_limit)
-				{
-					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0xf0,
-						0));
+				map.put(
+					"date",
+					Utils.convertDateToLocaleFormat(day_data.date)
+				);
+				map.put(
+					"calories",
+					Utils.convertNumberToLocaleFormat(day_data.calories)
+						+ getString(R.string.kcal)
+				);
+
+				Settings settings = data_accessor.getSettings();
+				if (day_data.calories <= settings.soft_limit) {
+					map.put(
+						"background_color",
+						Color.rgb(0xf0, 0xf0, 0xf0)
+					);
+				} else if (day_data.calories <= settings.hard_limit) {
+					map.put(
+						"background_color",
+						Color.rgb(0xf0, 0xf0, 0));
 				} else {
-					map.put(LIST_ITEM_BACKGROUND_NAME, Color.rgb(0xf0, 0xf0,
-						0xf0));
+					map.put(
+						"background_color",
+						Color.rgb(0xf0, 0, 0)
+					);
 				}
+
 				items.add(map);
 			}
+
 			mean /= all_days_data.size();
 			this.mean.setText(Utils.convertNumberToLocaleFormat(mean));
 
-			SimpleAdapter adapter = new SimpleAdapter(this, items,
-				R.layout.list_item, new String[] {LIST_ITEM_TITLE_NAME,
-				LIST_ITEM_CONTENT_NAME, LIST_ITEM_BACKGROUND_NAME}, new int[] {
-				R.id.list_item_title, R.id.list_item_content,
-				R.id.list_item_layout});
-			adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-				public boolean setViewValue(View view, Object data, String
-					data_text_representation)
-				{
-					if (view.getId() == R.id.list_item_layout) {
-						view.setBackgroundColor((Integer)data);
-						return true;
-					}
-					return false;
+			SimpleAdapter adapter = new SimpleAdapter(
+				this,
+				items,
+				R.layout.list_item,
+				new String[] {
+					"date",
+					"calories",
+					"background_color"
+				},
+				new int[] {
+					R.id.list_item_title,
+					R.id.list_item_content,
+					R.id.list_item_layout
 				}
-			});
+			);
+			adapter.setViewBinder(
+				new SimpleAdapter.ViewBinder() {
+					public boolean setViewValue(
+						View view,
+						Object data,
+						String data_text_representation
+					) {
+						if (view.getId() == R.id.list_item_layout) {
+							view.setBackgroundColor((Integer)data);
+							return true;
+						}
+
+						return false;
+					}
+				}
+			);
 
 			list_view.setAdapter(adapter);
+
+			GridSettings graph_render_settings = graph_view.getGridSettings();
+			graph_render_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
+			graph_render_settings.graph_paint.setStrokeWidth(3);
+			graph_render_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
 
 			List<Graph> graphs = new ArrayList<Graph>();
 			Graph graph1 = new Graph();
@@ -146,10 +172,6 @@ public class HistoryActivity extends Activity {
 	public void showGraphView(View view) {
 		changeView(HistoryViewMode.GRAPH);
 	}
-
-	private static final String LIST_ITEM_TITLE_NAME =      "date";
-	private static final String LIST_ITEM_CONTENT_NAME =    "calories";
-	private static final String LIST_ITEM_BACKGROUND_NAME = "background_color";
 
 	private HistoryViewMode view_mode;
 	private TextView mean;
