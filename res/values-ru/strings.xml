@@ -28,6 +28,8 @@
 	<string name = "error_message_box_title">Ошибка!</string>
 	<string name = "external_storage_error_message">Внешнее хранилище не примонтировано.</string>
 	<string name = "directory_error_message">Не удалось создать директорию для приложения.</string>
-	<string name = "backup_file_error_message">Не удалось записать бекап-файл.</string>
-	<string name = "backup_saved_notification">Бэкап истории записан в \"%s\".</string>
+	<string name = "backup_file_error_message">Не удалось записать бекап.</string>
+	<string name = "backup_saved_notification">Бэкап записан в \"%s\".</string>
+	<string name = "menu_backup_item">Бекап</string>
 </resources>
+

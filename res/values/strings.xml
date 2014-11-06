@@ -30,6 +30,8 @@
 	<string name = "error_message_box_title">Error!</string>
 	<string name = "external_storage_error_message">External storage wasn\'t mounted.</string>
 	<string name = "directory_error_message">Unable to create directory for application.</string>
-	<string name = "backup_file_error_message">Unable to write backup file.</string>
-	<string name = "backup_saved_notification">Backup of history saved to \"%s\".</string>
+	<string name = "backup_file_error_message">Unable to write backup.</string>
+	<string name = "backup_saved_notification">Backup saved to \"%s\".</string>
+	<string name = "menu_backup_item">Backup</string>
 </resources>
+

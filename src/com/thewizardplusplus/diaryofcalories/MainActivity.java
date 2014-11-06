@@ -21,6 +21,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	@Override
@@ -46,7 +49,6 @@ public class MainActivity extends Activity {
 		calories_edit = (EditText)findViewById(R.id.calories_edit);
 		cancel_button = (ImageButton)findViewById(R.id.cancel_button);
 
-		backupHistory(NotificationType.ONGOING);
 		updateUi();
 	}
 
@@ -54,6 +56,25 @@ public class MainActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		updateUi();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.backup:
+				backupHistory(NotificationType.HIDDING);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void addData(View view) {
@@ -65,7 +86,6 @@ public class MainActivity extends Activity {
 				Float.parseFloat(weight),
 				Float.parseFloat(calories)
 			);
-			backupHistory(NotificationType.HIDDING);
 
 			updateUi();
 			updateWidget();
@@ -79,7 +99,6 @@ public class MainActivity extends Activity {
 	public void undoTheLast(View view) {
 		DataAccessor data_accessor = DataAccessor.getInstance(this);
 		data_accessor.undoTheLast();
-		backupHistory(NotificationType.HIDDING);
 
 		updateUi();
 		updateWidget();
