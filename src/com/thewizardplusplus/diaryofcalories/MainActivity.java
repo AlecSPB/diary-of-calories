@@ -49,6 +49,18 @@ public class MainActivity extends Activity {
 		calories_edit = (EditText)findViewById(R.id.calories_edit);
 		cancel_button = (ImageButton)findViewById(R.id.cancel_button);
 
+		Intent intent = new Intent(this, MainActivity.class);
+		Utils.showNotification(
+			this,
+			ONGOING_NOTIFICATION_ID,
+			R.drawable.icon,
+			getString(R.string.application_name),
+			"",
+			intent,
+			NotificationType.ONGOING,
+			0
+		);
+
 		updateUi();
 	}
 
@@ -70,7 +82,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.backup:
-				backupHistory(NotificationType.HIDDING);
+				backupHistory();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -208,7 +220,7 @@ public class MainActivity extends Activity {
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}
 
-	private void backupHistory(NotificationType notification_type) {
+	private void backupHistory() {
 		String storage_state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(storage_state)) {
 			Utils.showAlertDialog(
@@ -272,21 +284,25 @@ public class MainActivity extends Activity {
 			return;
 		}
 
+		SimpleDateFormat notification_timestamp_format = new SimpleDateFormat(
+			"dd.MM.yyyy HH:mm:ss"
+		);
+		String notification_timestamp = notification_timestamp_format.format(current_date);
+
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
+
 		Utils.showNotification(
 			this,
-			notification_type == NotificationType.ONGOING
-				? ONGOING_NOTIFICATION_ID
-				: 0,
+			0,
 			R.drawable.icon,
 			getString(R.string.application_name),
 			String.format(
 				getString(R.string.backup_saved_notification),
-				backup_file.getAbsolutePath()
+				notification_timestamp
 			),
 			intent,
-			notification_type,
+			NotificationType.HIDDING,
 			NOTIFICATION_HIDE_DELAY
 		);
 	}
