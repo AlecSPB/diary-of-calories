@@ -22,11 +22,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 		surface_holder.addCallback(this);
 		data =             new ArrayList<Graph>();
 		grid_settings =    new GridSettings();
-		graph_translate =  new RealVector2D(grid_settings.grid_step,
+		graph_translate =  new Vector2D(grid_settings.grid_step,
 			grid_settings.grid_step);
-		graph_scale =      new RealVector2D(1.0, 1.0);
+		graph_scale =      new Vector2D(1.0, 1.0);
 		state =            ControlState.QUIET;
-		pointer1 =         new RealVector2D();
+		pointer1 =         new Vector2D();
 		//pointer2 =         new RealVector2D();
 		//middle_pointer =   new RealVector2D();
 		//pointer_distance = 0.0;
@@ -41,7 +41,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceChanged(SurfaceHolder surface_holder, int format, int
 		width, int height)
 	{
-		graph_painter.setSize(new IntegerSize(width, height));
+		graph_painter.setSize(new Vector2D(width, height));
 	}
 
 	public void surfaceDestroyed(SurfaceHolder surface_holder) {
@@ -75,10 +75,10 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 			MotionEvent.ACTION_MOVE)
 		{
 			if (state == ControlState.TRANSLATING) {
-				RealVector2D current_pointer1 = new RealVector2D();
+				Vector2D current_pointer1 = new Vector2D();
 				current_pointer1.x = event.getX();
 				current_pointer1.y = event.getY();
-				RealVector2D shift = RealVector2D.sub(current_pointer1,
+				Vector2D shift = Vector2D.sub(current_pointer1,
 					pointer1);
 				//shift.y = -shift.y;
 				shift.y = 0;
@@ -144,23 +144,23 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 		this.grid_settings = grid_settings;
 	}
 
-	public RealVector2D getTranslate() {
+	public Vector2D getTranslate() {
 		return graph_translate;
 	}
 
-	public void setTranslate(RealVector2D translate) {
+	public void setTranslate(Vector2D translate) {
 		graph_translate = translate;
 	}
 
-	public RealVector2D getScale() {
+	public Vector2D getScale() {
 		return graph_scale;
 	}
 
-	public RealVector2D getScaleBasePoint() {
+	public Vector2D getScaleBasePoint() {
 		return scale_base_point;
 	}
 
-	public void setScale(RealVector2D scale, RealVector2D base_point) {
+	public void setScale(Vector2D scale, Vector2D base_point) {
 		graph_scale = scale;
 		scale_base_point = base_point;
 	}
@@ -169,11 +169,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 	private List<Graph>   data;
 	private GraphPainter  graph_painter;
 	private GridSettings  grid_settings;
-	private RealVector2D  graph_translate;
-	private RealVector2D  graph_scale;
-	private RealVector2D  scale_base_point;
+	private Vector2D  graph_translate;
+	private Vector2D  graph_scale;
+	private Vector2D  scale_base_point;
 	private ControlState  state;
-	private RealVector2D  pointer1;
+	private Vector2D  pointer1;
 	//private RealVector2D  pointer2;
 	//private RealVector2D  middle_pointer;
 	//private double        pointer_distance;

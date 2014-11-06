@@ -15,18 +15,18 @@ public class GraphPainter extends Thread {
 		maximal_y =           0.0;
 		minimal_y =           0.0;
 		maximal_y =           0.0;
-		step =                new RealVector2D();
-		size =                new IntegerSize();
-		number_cells =        new IntegerVector2D();
+		step =                new Vector2D();
+		size =                new Vector2D();
+		number_cells =        new Vector2D();
 		grid_settings =       new GridSettings();
 		background_paint =    new Paint();
 		background_paint.setStrokeWidth(0);
 		background_paint.setColor(grid_settings.background_color);
-		graph_translate =     new RealVector2D(grid_settings.grid_step,
+		graph_translate =     new Vector2D(grid_settings.grid_step,
 			grid_settings.grid_step);
-		graph_scale =         new RealVector2D(1.0, 1.0);
-		scale_base_point =    new RealVector2D();
-		graph_base_point =    RealVector2D.sub(graph_translate,
+		graph_scale =         new Vector2D(1.0, 1.0);
+		scale_base_point =    new Vector2D();
+		graph_base_point =    Vector2D.sub(graph_translate,
 			scale_base_point).mul(graph_scale);
 		running =             true;
 	}
@@ -40,19 +40,19 @@ public class GraphPainter extends Thread {
 		maximal_y =           0.0;
 		minimal_y =           0.0;
 		maximal_y =           0.0;
-		step =                new RealVector2D();
-		size =                new IntegerSize();
-		number_cells =        new IntegerVector2D();
+		step =                new Vector2D();
+		size =                new Vector2D();
+		number_cells =        new Vector2D();
 		calculateFrame();
 		this.grid_settings =  grid_settings;
 		background_paint =    new Paint();
 		background_paint.setStrokeWidth(0);
 		background_paint.setColor(this.grid_settings.background_color);
-		graph_translate =     new RealVector2D(grid_settings.grid_step,
+		graph_translate =     new Vector2D(grid_settings.grid_step,
 			grid_settings.grid_step);
-		graph_scale =         new RealVector2D(1.0, 1.0);
-		scale_base_point =    new RealVector2D();
-		graph_base_point =    RealVector2D.sub(graph_translate,
+		graph_scale =         new Vector2D(1.0, 1.0);
+		scale_base_point =    new Vector2D();
+		graph_base_point =    Vector2D.sub(graph_translate,
 			scale_base_point).mul(graph_scale);
 		running =             true;
 	}
@@ -74,39 +74,39 @@ public class GraphPainter extends Thread {
 		this.grid_settings = grid_settings;
 	}
 
-	public IntegerSize getSize() {
+	public Vector2D getSize() {
 		return size;
 	}
 
-	public void setSize(IntegerSize size) {
+	public void setSize(Vector2D size) {
 		this.size = size;
-		number_cells.x = size.width / grid_settings.grid_step;
-		number_cells.y = size.height / grid_settings.grid_step;
+		number_cells.x = size.x / grid_settings.grid_step;
+		number_cells.y = size.y / grid_settings.grid_step;
 		calculateSteps();
 	}
 
-	public RealVector2D getTranslate() {
+	public Vector2D getTranslate() {
 		return graph_translate;
 	}
 
-	public void setTranslate(RealVector2D translate) {
+	public void setTranslate(Vector2D translate) {
 		graph_translate = translate;
-		graph_base_point = RealVector2D.sub(graph_translate,
+		graph_base_point = Vector2D.sub(graph_translate,
 			scale_base_point).mul(graph_scale);
 	}
 
-	public RealVector2D getScale() {
+	public Vector2D getScale() {
 		return graph_scale;
 	}
 
-	public RealVector2D getScaleBasePoint() {
+	public Vector2D getScaleBasePoint() {
 		return scale_base_point;
 	}
 
-	public void setScale(RealVector2D scale, RealVector2D base_point) {
+	public void setScale(Vector2D scale, Vector2D base_point) {
 		graph_scale = scale;
 		scale_base_point = base_point;
-		graph_base_point = RealVector2D.sub(graph_translate,
+		graph_base_point = Vector2D.sub(graph_translate,
 			scale_base_point).mul(graph_scale);
 	}
 
@@ -144,15 +144,15 @@ public class GraphPainter extends Thread {
 	private double          maximal_x;
 	private double          minimal_y;
 	private double          maximal_y;
-	private RealVector2D    step;
-	private IntegerSize     size;
-	private IntegerVector2D number_cells;
+	private Vector2D    step;
+	private Vector2D     size;
+	private Vector2D number_cells;
 	private GridSettings    grid_settings;
 	private Paint           background_paint;
-	private RealVector2D    graph_translate;
-	private RealVector2D    graph_scale;
-	private RealVector2D    scale_base_point;
-	private RealVector2D    graph_base_point;
+	private Vector2D    graph_translate;
+	private Vector2D    graph_scale;
+	private Vector2D    scale_base_point;
+	private Vector2D    graph_base_point;
 	private boolean         running;
 
 	private void calculateFrame() {
@@ -215,78 +215,78 @@ public class GraphPainter extends Thread {
 
 	private void drawGrid(Canvas canvas) {
 		if (grid_settings.draw_grid) {
-			for (int x = grid_settings.grid_step; x <= size.width -
+			for (int x = grid_settings.grid_step; x <= size.x -
 				grid_settings.grid_step; x += grid_settings.grid_step)
 			{
-				canvas.drawLine(x, 0, x, size.height, grid_settings.
+				canvas.drawLine(x, 0, x, (int)size.y, grid_settings.
 					grid_paint);
 			}
-			for (int y = (int)size.height - grid_settings.grid_step; y >=
+			for (int y = (int)size.y - grid_settings.grid_step; y >=
 				grid_settings.grid_step; y -= grid_settings.grid_step)
 			{
-				canvas.drawLine(0, y, size.width, y, grid_settings.grid_paint);
+				canvas.drawLine(0, y, (int)size.x, y, grid_settings.grid_paint);
 			}
 		}
 		if (grid_settings.draw_frame) {
-			canvas.drawLine(0, 0, size.width - 1, 0, grid_settings.grid_paint);
-			canvas.drawLine(size.width - 1, 0, size.width - 1, size.height - 1,
+			canvas.drawLine(0, 0, (int)size.x - 1, 0, grid_settings.grid_paint);
+			canvas.drawLine((int)size.x - 1, 0, (int)size.x - 1, (int)size.y - 1,
 				grid_settings.grid_paint);
-			canvas.drawLine(size.width - 1, size.height - 1, 0, size.height -
+			canvas.drawLine((int)size.x - 1, (int)size.y - 1, 0, (int)size.y -
 				1, grid_settings.grid_paint);
-			canvas.drawLine(0, size.height - 1, 0, 0, grid_settings.
+			canvas.drawLine(0, (int)size.y - 1, 0, 0, grid_settings.
 				grid_paint);
 		}
 	}
 
 	private void drawArrows(Canvas canvas) {
-		canvas.drawLine(Math.round(0.5 * grid_settings.grid_step), size.height
-			- grid_settings.grid_step, grid_settings.grid_step * (number_cells.
-			x - 1), size.height - grid_settings.grid_step, grid_settings.
+		canvas.drawLine(Math.round(0.5 * grid_settings.grid_step), (float)size.y
+			- grid_settings.grid_step, grid_settings.grid_step * ((float)number_cells.
+			x - 1), (float)size.y - grid_settings.grid_step, grid_settings.
 			arrow_paint);
-		canvas.drawLine(grid_settings.grid_step * (number_cells.x - 1),
-			size.height - grid_settings.grid_step, grid_settings.grid_step *
-			(number_cells.x - 2), size.height - Math.round(1.5 *
+		canvas.drawLine(grid_settings.grid_step * ((float)number_cells.x - 1),
+			(float)size.y - grid_settings.grid_step, grid_settings.grid_step *
+			((float)number_cells.x - 2), (float)size.y - Math.round(1.5 *
 			grid_settings.grid_step), grid_settings.arrow_paint);
-		canvas.drawLine(grid_settings.grid_step * (number_cells.x - 1),
-			size.height - grid_settings.grid_step, grid_settings.grid_step *
-			(number_cells.x - 2), size.height - Math.round(0.5 *
+		canvas.drawLine(grid_settings.grid_step * ((float)number_cells.x - 1),
+			(float)size.y - grid_settings.grid_step, grid_settings.grid_step *
+			((float)number_cells.x - 2), (float)size.y - Math.round(0.5 *
 			grid_settings.grid_step), grid_settings.arrow_paint);
-		canvas.drawLine(grid_settings.grid_step, size.height - Math.round(0.5 *
-			grid_settings.grid_step), grid_settings.grid_step, size.height -
-			grid_settings.grid_step * (number_cells.y - 1),
+		canvas.drawLine(grid_settings.grid_step, (float)size.y - Math.round(0.5 *
+			grid_settings.grid_step), grid_settings.grid_step, (float)size.y -
+			grid_settings.grid_step * ((float)number_cells.y - 1),
 			grid_settings.arrow_paint);
-		canvas.drawLine(grid_settings.grid_step, size.height -
-			grid_settings.grid_step * (number_cells.y - 1), Math.round(0.5 *
-			grid_settings.grid_step), size.height - grid_settings.grid_step *
-			(number_cells.y - 2), grid_settings.arrow_paint);
-		canvas.drawLine(grid_settings.grid_step, size.height -
-			grid_settings.grid_step * (number_cells.y - 1), Math.round(1.5 *
-			grid_settings.grid_step), size.height - grid_settings.grid_step *
-			(number_cells.y - 2), grid_settings.arrow_paint);
+		canvas.drawLine(grid_settings.grid_step, (float)size.y -
+			grid_settings.grid_step * ((float)number_cells.y - 1), Math.round(0.5 *
+			grid_settings.grid_step), (float)size.y - grid_settings.grid_step *
+			((float)number_cells.y - 2), grid_settings.arrow_paint);
+		canvas.drawLine(grid_settings.grid_step, (float)size.y -
+			grid_settings.grid_step * ((float)number_cells.y - 1), Math.round(1.5 *
+			grid_settings.grid_step), (float)size.y - grid_settings.grid_step *
+			((float)number_cells.y - 2), grid_settings.arrow_paint);
 	}
 
-	public IntegerVector2D transformPoint(RealVector2D point) {
-		IntegerVector2D result = new IntegerVector2D();
+	public Vector2D transformPoint(Vector2D point) {
+		Vector2D result = new Vector2D();
 		result.x = Math.round((point.x - minimal_x) / step.x *
 			grid_settings.grid_step * graph_scale.x + graph_base_point.x);
-		result.y = size.height - Math.round((point.y - minimal_y) / step.y *
+		result.y = size.y - Math.round((point.y - minimal_y) / step.y *
 			grid_settings.grid_step * graph_scale.y + graph_base_point.y);
 		return result;
 	}
 
 	public void drawGraph(Canvas canvas, Graph graph) {
-		IntegerVector2D start = new IntegerVector2D();
+		Vector2D start = new Vector2D();
 		boolean first_entry = true;
 		for (Map.Entry<Double, Double> entry : graph.data.entrySet()) {
-			RealVector2D original_point = new RealVector2D();
+			Vector2D original_point = new Vector2D();
 			original_point.x = entry.getKey().doubleValue();
 			original_point.y = entry.getValue().doubleValue();
-			IntegerVector2D transformed_point = transformPoint(original_point);
+			Vector2D transformed_point = transformPoint(original_point);
 			if (first_entry) {
 				first_entry = false;
 			} else {
-				canvas.drawLine(start.x, start.y, transformed_point.x,
-						transformed_point.y, graph.paint);
+				canvas.drawLine((int)start.x, (int)start.y, (int)transformed_point.x,
+						(int)transformed_point.y, graph.paint);
 			}
 			start = transformed_point;
 		}

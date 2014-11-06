@@ -1,12 +1,12 @@
 package com.thewizardplusplus.diaryofcalories;
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import android.graphics.Paint;
 import android.graphics.Color;
 
 public class Graph {
-	public Map<Double, Double> data = new HashMap<
+	public Map<Double, Double> data = new TreeMap<
 		Double,
 		Double
 	>();
