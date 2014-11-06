@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.graphics.Color;
-import android.content.*;
 
 public class HistoryActivity extends Activity {
 	@Override
@@ -28,6 +27,8 @@ public class HistoryActivity extends Activity {
 		graph_view = (GraphView)findViewById(R.id.graph_view);
 
 		DataAccessor data_accessor = DataAccessor.getInstance(this);
+		Settings settings = data_accessor.getSettings();
+
 		List<DayData> all_days_data = data_accessor.getAllDaysData();
 		if (all_days_data.size() > 0) {
 			List<Map<String, Object>> items = new ArrayList<
@@ -48,7 +49,6 @@ public class HistoryActivity extends Activity {
 						+ getString(R.string.kcal)
 				);
 
-				Settings settings = data_accessor.getSettings();
 				if (day_data.calories <= settings.soft_limit) {
 					map.put(
 						"background_color",
@@ -105,40 +105,48 @@ public class HistoryActivity extends Activity {
 
 			list_view.setAdapter(adapter);
 
-			GridSettings graph_render_settings = graph_view.getGridSettings();
-			graph_render_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
-			graph_render_settings.graph_paint.setStrokeWidth(3);
-			graph_render_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
+			GridSettings grid_settings = graph_view.getGridSettings();
+			grid_settings.background_color = Color.rgb(0xf0, 0xf0, 0xf0);
+			grid_settings.graph_paint.setStrokeWidth(3);
+			grid_settings.graph_paint.setColor(Color.rgb(0, 0xc0, 0));
 
 			List<Graph> graphs = new ArrayList<Graph>();
-			Graph graph1 = new Graph();
+			Graph calories_graph = new Graph();
 			double date = 0.0;
 			Collections.reverse(all_days_data);
-			for (DayData day_data : all_days_data) {
-				graph1.data.put(Double.valueOf(date), Double.valueOf(
-					day_data.calories));
+			for (DayData day_data: all_days_data) {
+				calories_graph.data.put(
+					Double.valueOf(date),
+					Double.valueOf(day_data.calories)
+				);
 				date += 1.0;
 			}
-			graph1.paint.setColor(Color.rgb(0, 0xc0, 0));
-			graphs.add(graph1);
+			calories_graph.paint.setColor(Color.rgb(0, 0xc0, 0));
+			graphs.add(calories_graph);
 
-			Graph graph2 = new Graph();
-			graph2.data.put(Double.valueOf(0.0), Double.valueOf(
-				(double)data_accessor.getSettings().soft_limit));
-			graph2.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
-				Double.valueOf((double)data_accessor.getSettings()
-				.soft_limit));
-			graph2.paint.setColor(Color.rgb(0xc0, 0xc0, 0));
-			graphs.add(graph2);
+			Graph soft_limit_graph = new Graph();
+			soft_limit_graph.data.put(
+				Double.valueOf(0.0),
+				Double.valueOf((double)settings.soft_limit)
+			);
+			soft_limit_graph.data.put(
+				Double.valueOf((double)all_days_data.size() - 1.0),
+				Double.valueOf((double)settings.soft_limit)
+			);
+			soft_limit_graph.paint.setColor(Color.rgb(0xc0, 0xc0, 0));
+			graphs.add(soft_limit_graph);
 
-			Graph graph3 = new Graph();
-			graph3.data.put(Double.valueOf(0.0), Double.valueOf(
-				(double)data_accessor.getSettings().hard_limit));
-			graph3.data.put(Double.valueOf((double)all_days_data.size() - 1.0),
-				Double.valueOf((double)data_accessor.getSettings()
-				.hard_limit));
-			graph3.paint.setColor(Color.rgb(0xc0, 0, 0));
-			graphs.add(graph3);
+			Graph hard_limit_graph = new Graph();
+			hard_limit_graph.data.put(
+				Double.valueOf(0.0),
+				Double.valueOf((double)settings.hard_limit)
+			);
+			hard_limit_graph.data.put(
+				Double.valueOf((double)all_days_data.size() - 1.0),
+				Double.valueOf((double)settings.hard_limit)
+			);
+			hard_limit_graph.paint.setColor(Color.rgb(0xc0, 0, 0));
+			graphs.add(hard_limit_graph);
 
 			graph_view.setData(graphs);
 		} else {
@@ -160,7 +168,6 @@ public class HistoryActivity extends Activity {
 			graph_view.setVisibility(View.GONE);
 		}
 
-		Settings settings = data_accessor.getSettings();
 		view_mode = settings.view_mode;
 		updateUi();
 	}
