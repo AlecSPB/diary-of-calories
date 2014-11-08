@@ -63,6 +63,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 			pointer1.y = event.getY(0);
 			pointer2.x = event.getX(1);
 			pointer2.y = event.getY(1);
+
 			middle_pointer = Vector2D.add(pointer1, pointer2).div(2.0);
 			pointer_distance = Vector2D.sub(pointer1, pointer2).length();
 		} else if (
@@ -78,7 +79,6 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 					current_pointer1,
 					pointer1
 				);
-				shift.y = -shift.y;
 
 				graph_translate.add(shift);
 				graph_painter.setTranslate(graph_translate);
@@ -101,7 +101,6 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 					current_middle_pointer,
 					middle_pointer
 				);
-				shift.y = -shift.y;
 
 				graph_translate.add(shift);
 				graph_painter.setTranslate(graph_translate);
