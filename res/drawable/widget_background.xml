@@ -7,8 +7,6 @@
 				android:startColor = "#343434"
 				android:endColor = "#171717"
 				android:angle = "270" />
-		    <!-- <solid
-		        android:color = "#ffffff" /> -->
 			<stroke
 				android:width = "3dp"
 				android:color = "#f3ae1b" />
@@ -22,3 +20,4 @@
 		</shape>
 	</item>
 </selector>
+

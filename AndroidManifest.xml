@@ -2,13 +2,15 @@
 <manifest
 	xmlns:android = "http://schemas.android.com/apk/res/android"
 	package = "com.thewizardplusplus.diaryofcalories"
-	android:versionCode = "1"
-	android:versionName = "1.0">
+	android:versionCode = "4"
+	android:versionName = "1.2">
+
 	<uses-sdk
 		android:minSdkVersion = "7"
 		android:targetSdkVersion = "7" />
 	<uses-permission
 		android:name = "android.permission.WRITE_EXTERNAL_STORAGE" />
+
 	<application
 		android:icon = "@drawable/icon"
 		android:label = "@string/application_name">
@@ -45,6 +47,7 @@
 				android:name = "android.support.PARENT_ACTIVITY"
 				android:value = "com.thewizard.diaryofcalories.MainActivity" />
 		</activity>
+
 		<receiver
 			android:name = "Widget"
 			android:exported = "false">
@@ -58,3 +61,4 @@
 		</receiver>
 	</application>
 </manifest>
+

@@ -14,9 +14,10 @@ public class AboutActivity extends Activity {
 		WebView web_view = (WebView)findViewById(R.id.web_view);
 		web_view.getSettings().setDefaultTextEncodingName("utf-8");
 		if (Locale.getDefault().toString().startsWith("ru")) {
-			web_view.loadUrl("file:///android_asset/about_page/page-ru.html");
+			web_view.loadUrl("file:///android_asset/web/page-ru.html");
 		} else {
-			web_view.loadUrl("file:///android_asset/about_page/page.html");
+			web_view.loadUrl("file:///android_asset/web/page.html");
 		}
 	}
 }
+

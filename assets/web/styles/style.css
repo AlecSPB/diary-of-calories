@@ -6,16 +6,20 @@
 	padding: 0px;
 }
 
-h1,
-h2 {
-	text-align: center;
+/* layout */
+body {
+	padding: 10px;
+	background-color: #f0f0f0;
 	font-size: 25px;
 }
 
+/* headers */
+h1,
 h2 {
-	font-weight: normal;
+	font-size: 25px;
 }
 
+/* others */
 .with_top_margin {
 	margin-top: 25px;
 }
@@ -27,9 +31,3 @@ hr {
 	color: black;
 }
 
-/* layout */
-body {
-	padding: 10px;
-	background-color: #f0f0f0;
-	font-size: 25px;
-}
