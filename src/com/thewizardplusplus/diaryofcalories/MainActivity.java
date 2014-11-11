@@ -1,5 +1,6 @@
 package com.thewizardplusplus.diaryofcalories;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -24,6 +25,8 @@ import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.app.AlarmManager;
+import android.content.Context;
 
 public class MainActivity extends Activity {
 	@Override
@@ -62,6 +65,7 @@ public class MainActivity extends Activity {
 		);
 
 		updateUi();
+		setWidgetUpdateAlarm();
 	}
 
 	@Override
@@ -212,6 +216,21 @@ public class MainActivity extends Activity {
 		);
 
 		cancel_button.setEnabled(data_accessor.getNumberOfCurrentDayData() > 0);
+	}
+
+	private void setWidgetUpdateAlarm() {
+		Intent intent = new Intent(this, WidgetUpdateAlarm.class);
+		PendingIntent pending_intent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		AlarmManager alarm_manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		alarm_manager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pending_intent);
 	}
 
 	private void updateWidget() {
