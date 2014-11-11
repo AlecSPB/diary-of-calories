@@ -114,7 +114,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 					/ pointer_distance;
 				graph_scale.x *= distance_ratio;
 				graph_scale.y *= distance_ratio;
-				graph_painter.setScale(graph_scale, middle_pointer);
+				graph_painter.setScale(graph_scale);
 
 				pointer1 = current_pointer1;
 				pointer2 = current_pointer2;
@@ -153,7 +153,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 	private GridSettings grid_settings = new GridSettings();
 	private Vector2D graph_translate = new Vector2D(
 		grid_settings.grid_step,
-		grid_settings.grid_step
+		-grid_settings.grid_step
 	);
 	private Vector2D graph_scale = new Vector2D(1.0, 1.0);
 	private GraphControlState state = GraphControlState.STABLE;
