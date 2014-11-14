@@ -22,10 +22,9 @@ public class GraphPainter extends Thread {
 
 		graph_translate = new Vector2D(
 			grid_settings.grid_step,
-			grid_settings.grid_step
+			-grid_settings.grid_step
 		);
 
-		updateBasePoint();
 		calculateFrame();
 	}
 
@@ -40,14 +39,10 @@ public class GraphPainter extends Thread {
 
 	public void setTranslate(Vector2D translate) {
 		graph_translate = translate;
-		updateBasePoint();
 	}
 
-	public void setScale(Vector2D scale, Vector2D base_point) {
+	public void setScale(Vector2D scale) {
 		graph_scale = scale;
-		scale_base_point = base_point;
-
-		updateBasePoint();
 	}
 
 	public void setRunning(boolean running) {
@@ -90,15 +85,6 @@ public class GraphPainter extends Thread {
 	private Paint background_paint = new Paint();
 	private Vector2D graph_translate;
 	private Vector2D graph_scale = new Vector2D(1.0, 1.0);
-	private Vector2D scale_base_point = new Vector2D();
-	private Vector2D graph_base_point;
-
-	private void updateBasePoint() {
-		graph_base_point = Vector2D.sub(
-			graph_translate,
-			scale_base_point
-		).mul(graph_scale);
-	}
 
 	private void calculateFrame() {
 		boolean first_entry = true;
@@ -295,7 +281,7 @@ public class GraphPainter extends Thread {
 				/ step.x
 				* grid_settings.grid_step
 				* graph_scale.x
-				+ graph_base_point.x
+				+ graph_translate.x
 			),
 			Math.round(
 				size.y
@@ -303,7 +289,7 @@ public class GraphPainter extends Thread {
 				/ step.y
 				* grid_settings.grid_step
 				* graph_scale.y
-				+ graph_base_point.y
+				+ graph_translate.y
 			)
 		);
 	}
