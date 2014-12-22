@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-	private static final String BACKUP_DIRECTORY = "diary-of-calories";
+	private static final String BACKUP_DIRECTORY = "#diary-of-calories";
 	private static final long NOTIFICATION_HIDE_DELAY = 2000;
 	private static final int ONGOING_NOTIFICATION_ID = -1;
 
