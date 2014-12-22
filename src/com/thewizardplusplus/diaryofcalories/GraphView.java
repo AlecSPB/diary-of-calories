@@ -162,4 +162,3 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 	private Vector2D middle_pointer = new Vector2D();
 	private double pointer_distance = 0.0;
 }
-

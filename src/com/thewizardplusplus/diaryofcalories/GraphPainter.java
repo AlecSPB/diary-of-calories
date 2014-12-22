@@ -155,13 +155,7 @@ public class GraphPainter extends Thread {
 				x <= size.x - grid_settings.grid_step;
 				x += grid_settings.grid_step
 			) {
-				canvas.drawLine(
-					x,
-					0,
-					x,
-					(int)size.y,
-					grid_settings.grid_paint
-				);
+				canvas.drawLine(x, 0, x, (int)size.y, grid_settings.grid_paint);
 			}
 
 			for (
@@ -169,24 +163,12 @@ public class GraphPainter extends Thread {
 				y >= grid_settings.grid_step;
 				y -= grid_settings.grid_step
 			) {
-				canvas.drawLine(
-					0,
-					y,
-					(int)size.x,
-					y,
-					grid_settings.grid_paint
-				);
+				canvas.drawLine(0, y, (int)size.x, y, grid_settings.grid_paint);
 			}
 		}
 
 		if (grid_settings.draw_frame) {
-			canvas.drawLine(
-				0,
-				0,
-				(int)size.x - 1,
-				0,
-				grid_settings.grid_paint
-			);
+			canvas.drawLine(0, 0, (int)size.x - 1, 0, grid_settings.grid_paint);
 			canvas.drawLine(
 				(int)size.x - 1,
 				0,
@@ -201,13 +183,7 @@ public class GraphPainter extends Thread {
 				(int)size.y - 1,
 				grid_settings.grid_paint
 			);
-			canvas.drawLine(
-				0,
-				(int)size.y - 1,
-				0,
-				0,
-				grid_settings.grid_paint
-			);
+			canvas.drawLine(0, (int)size.y - 1, 0, 0, grid_settings.grid_paint);
 		}
 	}
 

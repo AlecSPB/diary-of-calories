@@ -30,4 +30,3 @@ public class GridSettings {
 		graph_paint.setColor(Color.GRAY);
 	}
 }
-

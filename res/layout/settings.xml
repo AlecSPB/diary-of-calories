@@ -75,4 +75,3 @@
 		android:contentDescription = "@string/save_button"
 		android:onClick = "saveSettings" />
 </LinearLayout>
-

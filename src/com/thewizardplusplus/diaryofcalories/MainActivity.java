@@ -182,16 +182,26 @@ public class MainActivity extends Activity {
 				maximum_calories = soft_limit;
 
 				this.current_day_calories.setTextColor(Color.rgb(0, 0xc0, 0));
-				this.current_day_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+				this.current_day_calories_unit.setTextColor(
+					Color.rgb(0, 0xc0, 0)
+				);
 				this.remaining_calories.setTextColor(Color.rgb(0, 0xc0, 0));
-				this.remaining_calories_unit.setTextColor(Color.rgb(0, 0xc0, 0));
+				this.remaining_calories_unit.setTextColor(
+					Color.rgb(0, 0xc0, 0)
+				);
 			} else {
 				maximum_calories = hard_limit;
 
-				this.current_day_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
-				this.current_day_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+				this.current_day_calories.setTextColor(
+					Color.rgb(0xc0, 0xc0, 0)
+				);
+				this.current_day_calories_unit.setTextColor(
+					Color.rgb(0xc0, 0xc0, 0)
+				);
 				this.remaining_calories.setTextColor(Color.rgb(0xc0, 0xc0, 0));
-				this.remaining_calories_unit.setTextColor(Color.rgb(0xc0, 0xc0, 0));
+				this.remaining_calories_unit.setTextColor(
+					Color.rgb(0xc0, 0xc0, 0)
+				);
 			}
 
 			difference = maximum_calories - current_day_calories;
@@ -220,7 +230,12 @@ public class MainActivity extends Activity {
 
 	private void setWidgetUpdateAlarm() {
 		Intent intent = new Intent(this, WidgetUpdateAlarm.class);
-		PendingIntent pending_intent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pending_intent = PendingIntent.getBroadcast(
+			this,
+			0,
+			intent,
+			PendingIntent.FLAG_UPDATE_CURRENT
+		);
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
@@ -229,8 +244,15 @@ public class MainActivity extends Activity {
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
-		AlarmManager alarm_manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		alarm_manager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pending_intent);
+		AlarmManager alarm_manager = (AlarmManager)getSystemService(
+			Context.ALARM_SERVICE
+		);
+		alarm_manager.setInexactRepeating(
+			AlarmManager.RTC,
+			calendar.getTimeInMillis(),
+			AlarmManager.INTERVAL_DAY,
+			pending_intent
+		);
 	}
 
 	private void updateWidget() {
@@ -306,7 +328,9 @@ public class MainActivity extends Activity {
 		SimpleDateFormat notification_timestamp_format = new SimpleDateFormat(
 			"dd.MM.yyyy HH:mm:ss"
 		);
-		String notification_timestamp = notification_timestamp_format.format(current_date);
+		String notification_timestamp = notification_timestamp_format.format(
+			current_date
+		);
 
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
@@ -326,4 +350,3 @@ public class MainActivity extends Activity {
 		);
 	}
 }
-

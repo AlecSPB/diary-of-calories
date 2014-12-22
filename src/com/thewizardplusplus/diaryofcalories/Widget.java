@@ -31,12 +31,8 @@ public class Widget extends AppWidgetProvider {
 			Utils.convertNumberToLocaleFormat(current_day_calories)
 		);
 
-		float soft_limit = data_accessor
-			.getSettings()
-			.soft_limit;
-		float hard_limit = data_accessor
-			.getSettings()
-			.hard_limit;
+		float soft_limit = data_accessor.getSettings().soft_limit;
+		float hard_limit = data_accessor.getSettings().hard_limit;
 		double maximum_calories = 0.0;
 		double difference = 0.0;
 		if (current_day_calories <= hard_limit) {
@@ -46,17 +42,41 @@ public class Widget extends AppWidgetProvider {
 			if (current_day_calories <= soft_limit) {
 				maximum_calories = soft_limit;
 
-				views.setTextColor(R.id.current_day_calories, Color.rgb(0, 0xc0, 0));
-				views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0, 0xc0, 0));
-				views.setTextColor(R.id.remaining_calories, Color.rgb(0, 0xc0, 0));
-				views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0, 0xc0, 0));
+				views.setTextColor(
+					R.id.current_day_calories,
+					Color.rgb(0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.current_day_calories_unit,
+					Color.rgb(0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.remaining_calories,
+					Color.rgb(0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.remaining_calories_unit,
+					Color.rgb(0, 0xc0, 0)
+				);
 			} else {
 				maximum_calories = hard_limit;
 
-				views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0xc0, 0));
-				views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0, 0xc0, 0));
-				views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0xc0, 0));
-				views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0xc0, 0));
+				views.setTextColor(
+					R.id.current_day_calories,
+					Color.rgb(0xc0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.current_day_calories_unit,
+					Color.rgb(0xc0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.remaining_calories,
+					Color.rgb(0xc0, 0xc0, 0)
+				);
+				views.setTextColor(
+					R.id.remaining_calories_unit,
+					Color.rgb(0xc0, 0xc0, 0)
+				);
 			}
 
 			difference = maximum_calories - current_day_calories;
@@ -67,10 +87,22 @@ public class Widget extends AppWidgetProvider {
 			views.setViewVisibility(R.id.label3, View.GONE);
 			views.setViewVisibility(R.id.label4, View.VISIBLE);
 
-			views.setTextColor(R.id.current_day_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.current_day_calories_unit, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.remaining_calories, Color.rgb(0xc0, 0, 0));
-			views.setTextColor(R.id.remaining_calories_unit, Color.rgb(0xc0, 0, 0));
+			views.setTextColor(
+				R.id.current_day_calories,
+				Color.rgb(0xc0, 0, 0)
+			);
+			views.setTextColor(
+				R.id.current_day_calories_unit,
+				Color.rgb(0xc0, 0, 0)
+			);
+			views.setTextColor(
+				R.id.remaining_calories,
+				Color.rgb(0xc0, 0, 0)
+			);
+			views.setTextColor(
+				R.id.remaining_calories_unit,
+				Color.rgb(0xc0, 0, 0)
+			);
 		}
 
 		views.setTextViewText(
@@ -95,4 +127,3 @@ public class Widget extends AppWidgetProvider {
 		widget_manager.updateAppWidget(widget_ids, views);
 	}
 }
-

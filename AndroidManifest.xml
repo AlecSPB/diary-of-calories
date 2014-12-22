@@ -62,4 +62,3 @@
 		<receiver android:name = "WidgetUpdateAlarm"></receiver>
 	</application>
 </manifest>
-

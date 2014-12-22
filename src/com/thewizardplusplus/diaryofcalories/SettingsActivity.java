@@ -56,4 +56,3 @@ public class SettingsActivity extends Activity {
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
 	}
 }
-

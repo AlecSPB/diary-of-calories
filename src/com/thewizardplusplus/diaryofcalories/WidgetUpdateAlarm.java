@@ -15,4 +15,3 @@ public class WidgetUpdateAlarm extends BroadcastReceiver {
 		AppWidgetManager.getInstance(context).updateAppWidget(widget, views);
 	}
 }
-

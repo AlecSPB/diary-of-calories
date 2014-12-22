@@ -4,4 +4,3 @@ public enum NotificationType {
 	HIDDING,
 	ONGOING
 }
-

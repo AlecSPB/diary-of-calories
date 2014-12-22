@@ -20,4 +20,3 @@ public class Graph {
 		paint.setColor(Color.GRAY);
 	}
 }
-

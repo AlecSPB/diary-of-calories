@@ -5,4 +5,3 @@ public enum GraphControlState {
 	TRANSLATING,
 	SCALING
 }
-

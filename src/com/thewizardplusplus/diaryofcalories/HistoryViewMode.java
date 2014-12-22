@@ -4,4 +4,3 @@ public enum HistoryViewMode {
 	LIST,
 	GRAPH
 }
-
