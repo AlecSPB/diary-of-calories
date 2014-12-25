@@ -32,6 +32,5 @@
 	<string name = "directory_error_message">Не удалось создать директорию для приложения.</string>
 	<string name = "backup_file_error_message">Не удалось сохранить бекап.</string>
 	<string name = "backup_saved_notification">Бэкап сохранён %s.</string>
-	<string name = "menu_backup_item">Бекап</string>
+	<string name = "restore_file_error_message">Не удалось прочитать бекап.</string>
 </resources>
-

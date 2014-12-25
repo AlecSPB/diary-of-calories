@@ -55,7 +55,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 			pointer1.y = event.getY();
 		} else if (
 			(actions & MotionEvent.ACTION_MASK)
-			== MotionEvent.ACTION_POINTER_1_DOWN
+			== MotionEvent.ACTION_POINTER_DOWN
 		) {
 			state = GraphControlState.SCALING;
 
@@ -123,7 +123,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		} else if (
 			(actions & MotionEvent.ACTION_MASK)
-			== MotionEvent.ACTION_POINTER_1_UP
+			== MotionEvent.ACTION_POINTER_UP
 		) {
 			state = GraphControlState.TRANSLATING;
 
@@ -136,6 +136,12 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 			state = GraphControlState.STABLE;
 		}
 
+		return true;
+	}
+
+	@Override
+	public boolean performClick() {
+		super.performClick();
 		return true;
 	}
 

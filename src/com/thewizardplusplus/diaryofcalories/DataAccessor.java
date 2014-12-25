@@ -1,7 +1,9 @@
 package com.thewizardplusplus.diaryofcalories;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -141,6 +143,8 @@ public class DataAccessor {
 		database.close();
 		return xml;
 	}
+
+	public void setDataFromXml(InputStream backup_file) {}
 
 	public Settings getSettings() {
 		Settings settings = new Settings();

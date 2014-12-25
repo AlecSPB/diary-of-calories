@@ -245,7 +245,7 @@
 				android:background = "@drawable/black_button"
 				android:src = "@drawable/restore"
 				android:contentDescription = "@string/restore_button"
-				android:onClick = "restoreHistory" />
+				android:onClick = "selectBackupForRestore" />
 		</LinearLayout>
 	</LinearLayout>
 </ScrollView>
