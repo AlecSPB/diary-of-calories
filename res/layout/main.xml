@@ -226,5 +226,13 @@
 				android:contentDescription = "@string/about_button"
 				android:onClick = "showAbout" />
 		</LinearLayout>
+		<ImageButton
+				style = "@style/button_style"
+				android:layout_width = "fill_parent"
+				android:layout_height = "75dp"
+				android:background = "@drawable/black_button"
+				android:src = "@drawable/save"
+				android:contentDescription = "@string/backup_button"
+				android:onClick = "backupHistory" />
 	</LinearLayout>
 </ScrollView>

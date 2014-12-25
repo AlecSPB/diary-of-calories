@@ -22,6 +22,7 @@
 	<string name = "history_button">История</string>
 	<string name = "settings_button">Настройки</string>
 	<string name = "about_button">О программе</string>
+	<string name = "backup_button">Бекап</string>
 	<string name = "list_view_button">Список</string>
 	<string name = "graph_view_button">График</string>
 	<string name = "save_button">Сохранить</string>

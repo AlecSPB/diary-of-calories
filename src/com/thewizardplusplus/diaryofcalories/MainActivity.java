@@ -77,25 +77,6 @@ public class MainActivity extends Activity {
 		updateUi();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.backup:
-				backupHistory();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
 	public void addData(View view) {
 		String weight = weight_edit.getText().toString();
 		String calories = calories_edit.getText().toString();
@@ -138,6 +119,94 @@ public class MainActivity extends Activity {
 	public void showAbout(View view) {
 		Intent intent = new Intent(this, AboutActivity.class);
 		startActivity(intent);
+	}
+
+	public void backupHistory(View view) {
+		String storage_state = Environment.getExternalStorageState();
+		if (!Environment.MEDIA_MOUNTED.equals(storage_state)) {
+			Utils.showAlertDialog(
+				this,
+				getString(R.string.error_message_box_title),
+				getString(R.string.external_storage_error_message)
+			);
+
+			return;
+		}
+
+		File directory = new File(
+			Environment.getExternalStorageDirectory(),
+			BACKUP_DIRECTORY
+		);
+		if (!directory.exists()) {
+			boolean result = directory.mkdir();
+			if (!result) {
+				Utils.showAlertDialog(
+					this,
+					getString(R.string.error_message_box_title),
+					getString(R.string.directory_error_message)
+				);
+
+				return;
+			}
+		}
+
+		Date current_date = new Date();
+		SimpleDateFormat file_suffix_format = new SimpleDateFormat(
+			"yyyy-MM-dd-HH-mm-ss",
+			Locale.US
+		);
+		String file_suffix = file_suffix_format.format(current_date);
+
+		File backup_file = new File(
+			directory,
+			"database_dump_" + file_suffix + ".xml"
+		);
+		OutputStream out = null;
+		try {
+			try {
+				out = new BufferedOutputStream(
+					new FileOutputStream(backup_file)
+				);
+
+				DataAccessor data_accessor = DataAccessor.getInstance(this);
+				String xml = data_accessor.getAllDataInXml();
+				out.write(xml.getBytes());
+			} finally {
+				if (out != null) {
+					out.close();
+				}
+			}
+		} catch (IOException exception) {
+			Utils.showAlertDialog(
+				this,
+				getString(R.string.error_message_box_title),
+				getString(R.string.backup_file_error_message)
+			);
+
+			return;
+		}
+
+		DateFormat notification_timestamp_format = DateFormat.getDateInstance();
+		String notification_timestamp = notification_timestamp_format.format(
+			current_date
+		);
+
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
+
+		Utils.showNotification(
+			this,
+			0,
+			R.drawable.icon,
+			getString(R.string.application_name),
+			String.format(
+				getString(R.string.backup_saved_notification),
+				notification_timestamp
+			),
+			intent,
+			NotificationType.HIDDING,
+			NOTIFICATION_HIDE_DELAY
+		);
 	}
 
 	private static final String BACKUP_DIRECTORY = "#diary-of-calories";
@@ -262,93 +331,5 @@ public class MainActivity extends Activity {
 		RemoteViews views = Widget.getUpdatedViews(this);
 		ComponentName widget = new ComponentName(this, Widget.class);
 		AppWidgetManager.getInstance(this).updateAppWidget(widget, views);
-	}
-
-	private void backupHistory() {
-		String storage_state = Environment.getExternalStorageState();
-		if (!Environment.MEDIA_MOUNTED.equals(storage_state)) {
-			Utils.showAlertDialog(
-				this,
-				getString(R.string.error_message_box_title),
-				getString(R.string.external_storage_error_message)
-			);
-
-			return;
-		}
-
-		File directory = new File(
-			Environment.getExternalStorageDirectory(),
-			BACKUP_DIRECTORY
-		);
-		if (!directory.exists()) {
-			boolean result = directory.mkdir();
-			if (!result) {
-				Utils.showAlertDialog(
-					this,
-					getString(R.string.error_message_box_title),
-					getString(R.string.directory_error_message)
-				);
-
-				return;
-			}
-		}
-
-		Date current_date = new Date();
-		SimpleDateFormat file_suffix_format = new SimpleDateFormat(
-			"yyyy-MM-dd-HH-mm-ss",
-			Locale.US
-		);
-		String file_suffix = file_suffix_format.format(current_date);
-
-		File backup_file = new File(
-			directory,
-			"database_dump_" + file_suffix + ".xml"
-		);
-		OutputStream out = null;
-		try {
-			try {
-				out = new BufferedOutputStream(
-					new FileOutputStream(backup_file)
-				);
-
-				DataAccessor data_accessor = DataAccessor.getInstance(this);
-				String xml = data_accessor.getAllDataInXml();
-				out.write(xml.getBytes());
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-			}
-		} catch (IOException exception) {
-			Utils.showAlertDialog(
-				this,
-				getString(R.string.error_message_box_title),
-				getString(R.string.backup_file_error_message)
-			);
-
-			return;
-		}
-
-		DateFormat notification_timestamp_format = DateFormat.getDateInstance();
-		String notification_timestamp = notification_timestamp_format.format(
-			current_date
-		);
-
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
-
-		Utils.showNotification(
-			this,
-			0,
-			R.drawable.icon,
-			getString(R.string.application_name),
-			String.format(
-				getString(R.string.backup_saved_notification),
-				notification_timestamp
-			),
-			intent,
-			NotificationType.HIDDING,
-			NOTIFICATION_HIDE_DELAY
-		);
 	}
 }
