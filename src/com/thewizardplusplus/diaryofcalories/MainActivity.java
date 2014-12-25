@@ -21,6 +21,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
@@ -204,6 +205,10 @@ public class MainActivity extends Activity {
 			NotificationType.HIDDING,
 			NOTIFICATION_HIDE_DELAY
 		);
+	}
+	
+	public void restoreHistory(View view) {
+		Toast.makeText(this, "Not yet implement!", Toast.LENGTH_LONG).show();
 	}
 
 	private static final String BACKUP_DIRECTORY = "#diary-of-calories";

@@ -25,6 +25,7 @@
 	<string name = "settings_button">Settings</string>
 	<string name = "about_button">About</string>
 	<string name = "backup_button">Backup</string>
+	<string name = "restore_button">Restore</string>
 	<string name = "list_view_button">List</string>
 	<string name = "graph_view_button">Graph</string>
 	<string name = "save_button">Save</string>
