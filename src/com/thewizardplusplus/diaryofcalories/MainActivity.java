@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
 		);
 
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.fromFile(backup_file), "text/xml");
+		intent.setDataAndType(Uri.fromFile(backup_file), BACKUP_MIME_TYPE);
 
 		Utils.showNotification(
 			this,
@@ -206,14 +206,26 @@ public class MainActivity extends Activity {
 			NOTIFICATION_HIDE_DELAY
 		);
 	}
-	
+
 	public void restoreHistory(View view) {
-		Toast.makeText(this, "Not yet implement!", Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType(BACKUP_MIME_TYPE);
+
+		startActivityForResult(intent, FILE_SELECT_CODE);
 	}
 
+	protected void onActivityResult(int request_code, int result_code, Intent data) {
+		if (request_code == FILE_SELECT_CODE && result_code == Activity.RESULT_OK) {
+			String filename = data.getData().getPath();
+			Toast.makeText(this, "Selected file \"" + filename + "\".", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private static final String BACKUP_MIME_TYPE = "text/xml";
 	private static final String BACKUP_DIRECTORY = "#diary-of-calories";
 	private static final long NOTIFICATION_HIDE_DELAY = 5000;
 	private static final int ONGOING_NOTIFICATION_ID = -1;
+	private static final int FILE_SELECT_CODE = 1;
 
 	private TextView label1;
 	private TextView current_day_calories;
