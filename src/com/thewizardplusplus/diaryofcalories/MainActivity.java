@@ -2,12 +2,15 @@ package com.thewizardplusplus.diaryofcalories;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -292,7 +295,8 @@ public class MainActivity extends Activity {
 
 		Date current_date = new Date();
 		SimpleDateFormat file_suffix_format = new SimpleDateFormat(
-			"yyyy-MM-dd-HH-mm-ss"
+			"yyyy-MM-dd-HH-mm-ss",
+			Locale.US
 		);
 		String file_suffix = file_suffix_format.format(current_date);
 
@@ -325,9 +329,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		SimpleDateFormat notification_timestamp_format = new SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss"
-		);
+		DateFormat notification_timestamp_format = DateFormat.getDateInstance();
 		String notification_timestamp = notification_timestamp_format.format(
 			current_date
 		);

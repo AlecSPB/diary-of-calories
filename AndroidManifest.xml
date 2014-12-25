@@ -7,17 +7,18 @@
 
 	<uses-sdk
 		android:minSdkVersion = "7"
-		android:targetSdkVersion = "7" />
+		android:targetSdkVersion = "21" />
 	<uses-permission
 		android:name = "android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<application
 		android:icon = "@drawable/icon"
-		android:label = "@string/application_name">
+		android:label = "@string/application_name"
+		android:theme = "@style/application_theme"
+		android:allowBackup = "true">
 		<activity
 			android:label = "@string/application_name"
-			android:name = ".MainActivity"
-			android:theme = "@android:style/Theme.NoTitleBar">
+			android:name = ".MainActivity">
 			<intent-filter>
 				<action android:name = "android.intent.action.MAIN" />
 				<category android:name = "android.intent.category.LAUNCHER" />
@@ -25,24 +26,21 @@
 		</activity>
 		<activity
 			android:label = "@string/history_activity_name"
-			android:name = ".HistoryActivity"
-			android:theme = "@android:style/Theme.NoTitleBar">
+			android:name = ".HistoryActivity">
 			<meta-data
 				android:name = "android.support.PARENT_ACTIVITY"
 				android:value = "com.thewizard.diaryofcalories.MainActivity" />
 		</activity>
 		<activity
 			android:label = "@string/settings_activity_name"
-			android:name = ".SettingsActivity"
-			android:theme = "@android:style/Theme.NoTitleBar">
+			android:name = ".SettingsActivity">
 			<meta-data
 				android:name = "android.support.PARENT_ACTIVITY"
 				android:value = "com.thewizard.diaryofcalories.MainActivity" />
 		</activity>
 		<activity
 			android:label = "@string/about_activity_name"
-			android:name = ".AboutActivity"
-			android:theme = "@android:style/Theme.NoTitleBar">
+			android:name = ".AboutActivity">
 			<meta-data
 				android:name = "android.support.PARENT_ACTIVITY"
 				android:value = "com.thewizard.diaryofcalories.MainActivity" />
