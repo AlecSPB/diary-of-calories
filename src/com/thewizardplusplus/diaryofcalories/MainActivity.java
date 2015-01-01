@@ -5,10 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
@@ -209,42 +206,10 @@ public class MainActivity extends Activity {
 		);
 	}
 
-	public void selectBackupForRestore(View view) {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType(BACKUP_MIME_TYPE);
-
-		startActivityForResult(intent, FILE_SELECT_CODE);
-	}
-
-	protected void onActivityResult(
-		int request_code,
-		int result_code,
-		Intent data
-	) {
-		if (
-			request_code == FILE_SELECT_CODE
-			&& result_code == Activity.RESULT_OK
-		) {
-			Uri uri = data.getData();
-			if (uri != null) {
-				String path = uri.getPath();
-				if (path != null) {
-					String[] path_parts = path.split(":");
-					restoreHistory(
-						Environment.getExternalStorageDirectory()
-						+ "/"
-						+ path_parts[path_parts.length > 1 ? 1 : 0]
-					);
-				}
-			}
-		}
-	}
-
 	private static final String BACKUP_MIME_TYPE = "text/xml";
 	private static final String BACKUP_DIRECTORY = "#diary-of-calories";
 	private static final long NOTIFICATION_HIDE_DELAY = 5000;
 	private static final int ONGOING_NOTIFICATION_ID = -1;
-	private static final int FILE_SELECT_CODE = 1;
 
 	private TextView label1;
 	private TextView current_day_calories;
@@ -331,29 +296,6 @@ public class MainActivity extends Activity {
 		);
 
 		cancel_button.setEnabled(data_accessor.getNumberOfCurrentDayData() > 0);
-	}
-
-	private void restoreHistory(String filename) {
-		File backup_file = new File(filename);
-		InputStream in = null;
-		try {
-			try {
-				in = new BufferedInputStream(new FileInputStream(backup_file));
-
-				DataAccessor data_accessor = DataAccessor.getInstance(this);
-				data_accessor.setDataFromXml(in);
-			} finally {
-				if (in != null) {
-					in.close();
-				}
-			}
-		} catch (IOException exception) {
-			Utils.showAlertDialog(
-				this,
-				getString(R.string.error_message_box_title),
-				getString(R.string.restore_file_error_message)
-			);
-		}
 	}
 
 	private void setWidgetUpdateAlarm() {

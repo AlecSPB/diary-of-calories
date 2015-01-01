@@ -226,26 +226,13 @@
 				android:contentDescription = "@string/about_button"
 				android:onClick = "showAbout" />
 		</LinearLayout>
-		<LinearLayout
+		<ImageButton
+			style = "@style/button_style"
 			android:layout_width = "fill_parent"
-			android:layout_height = "wrap_content"
-			android:orientation = "horizontal">
-			<ImageButton
-				style = "@style/button_style"
-				android:layout_width = "0dp"
-				android:layout_weight = "1"
-				android:background = "@drawable/black_button"
-				android:src = "@drawable/backup"
-				android:contentDescription = "@string/backup_button"
-				android:onClick = "backupHistory" />
-			<ImageButton
-				style = "@style/button_style"
-				android:layout_width = "0dp"
-				android:layout_weight = "1"
-				android:background = "@drawable/black_button"
-				android:src = "@drawable/restore"
-				android:contentDescription = "@string/restore_button"
-				android:onClick = "selectBackupForRestore" />
-		</LinearLayout>
+			android:layout_height = "75dp"
+			android:background = "@drawable/black_button"
+			android:src = "@drawable/backup"
+			android:contentDescription = "@string/backup_button"
+			android:onClick = "backupHistory" />
 	</LinearLayout>
 </ScrollView>
