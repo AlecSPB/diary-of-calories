@@ -1,8 +1,18 @@
 package com.thewizardplusplus.diaryofcalories;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -144,7 +154,104 @@ public class DataAccessor {
 		return xml;
 	}
 
-	public void setDataFromXml(InputStream backup_file) {}
+	public void setDataFromFile(InputStream in) {
+		String sql = "";
+		try {
+			Element history = DocumentBuilderFactory
+				.newInstance()
+				.newDocumentBuilder()
+				.parse(in)
+				.getDocumentElement();
+			history.normalize();
+			NodeList days = history.getElementsByTagName("day");
+			for (int i = 0; i < days.getLength(); i++) {
+				if (days.item(i).getNodeType() == Node.ELEMENT_NODE) {
+					Element day = (Element)days.item(i);
+					if (!day.hasAttribute("date")) {
+						continue;
+					}
+
+					NodeList foods = day.getElementsByTagName("food");
+					for (int j = 0; j < foods.getLength(); j++) {
+						if (foods.item(j).getNodeType() == Node.ELEMENT_NODE) {
+							Element food = (Element)foods.item(j);
+							if (
+								!food.hasAttribute("weight")
+								|| !food.hasAttribute("calories")
+							) {
+								continue;
+							}
+
+							if (!sql.isEmpty()) {
+								sql += ",";
+							}
+							sql += "("
+								+ food.getAttribute("weight") + ","
+								+ food.getAttribute("calories") + ","
+								+ "'" + day.getAttribute("date") + "'"
+							+ ")";
+						}
+					}
+				}
+			}
+		} catch (ParserConfigurationException exception) {
+			processDataSettingException();
+			return;
+		} catch (SAXException exception) {
+			processDataSettingException();
+			return;
+		} catch (IOException exception) {
+			processDataSettingException();
+			return;
+		} catch (DOMException exception) {
+			processDataSettingException();
+			return;
+		}
+
+		if (!sql.isEmpty()) {
+			SQLiteDatabase database = database_helper.getWritableDatabase();
+			database.execSQL("DELETE FROM day_data_list");
+			database.execSQL(
+				"INSERT INTO day_data_list"
+					+ "(weight, calories, date)"
+				+ "VALUES" + sql
+			);
+
+			database.close();
+		}
+	}
+
+	public void addData(float weight, float calories) {
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+		database.execSQL(
+			"INSERT INTO day_data_list"
+				+ "(weight, calories, date)"
+			+ "VALUES ("
+				+ String.valueOf(weight) + ","
+				+ String.valueOf(calories) + ","
+				+ "(SELECT datetime('now', 'localtime'))"
+			+ ")"
+		);
+		database.close();
+	}
+
+	public void undoTheLast() {
+		if (getNumberOfCurrentDayData() <= 0) {
+			return;
+		}
+
+		SQLiteDatabase database = database_helper.getWritableDatabase();
+		database.execSQL(
+			"DELETE FROM day_data_list "
+			+ "WHERE"
+				+ "(SELECT datetime(date))"
+				+ "= ("
+					+ "SELECT MAX((SELECT datetime(date)))"
+					+ "FROM day_data_list"
+				+ ")"
+		);
+		database.close();
+	}
 
 	public Settings getSettings() {
 		Settings settings = new Settings();
@@ -187,38 +294,6 @@ public class DataAccessor {
 		preferences_editor.commit();
 	}
 
-	public void addData(float weight, float calories) {
-		SQLiteDatabase database = database_helper.getWritableDatabase();
-		database.execSQL(
-			"INSERT INTO day_data_list"
-				+ "(weight, calories, date)"
-			+ "VALUES ("
-				+ String.valueOf(weight) + ","
-				+ String.valueOf(calories) + ","
-				+ "(SELECT datetime('now', 'localtime'))"
-			+ ")"
-		);
-		database.close();
-	}
-
-	public void undoTheLast() {
-		if (getNumberOfCurrentDayData() <= 0) {
-			return;
-		}
-
-		SQLiteDatabase database = database_helper.getWritableDatabase();
-		database.execSQL(
-			"DELETE FROM day_data_list "
-			+ "WHERE"
-				+ "(SELECT datetime(date))"
-				+ "= ("
-					+ "SELECT MAX((SELECT datetime(date)))"
-					+ "FROM day_data_list"
-				+ ")"
-		);
-		database.close();
-	}
-
 	private static DataAccessor instance;
 
 	private Context context;
@@ -227,5 +302,13 @@ public class DataAccessor {
 	private DataAccessor(Context context) {
 		this.context = context;
 		database_helper = new DatabaseHelper(context);
+	}
+
+	private void processDataSettingException() {
+		Utils.showAlertDialog(
+			context,
+			context.getString(R.string.error_message_box_title),
+			context.getString(R.string.restore_file_error_message)
+		);
 	}
 }
