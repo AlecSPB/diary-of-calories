@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	android:orientation = "vertical"
+	android:layout_width = "fill_parent"
+	android:layout_height = "fill_parent"
+	android:padding = "10dp">
+	<TextView
+		style = "@style/title_style"
+		android:background = "@drawable/title"
+		android:text = "@string/history_activity_name" />
+	<TextView
+		android:id = "@+id/label10"
+		style = "@style/label_style"
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:text = "@string/label10"
+		android:visibility = "gone" />
+	<TextView
+		android:id = "@+id/label11"
+		style = "@style/label_style"
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:text = "@string/label11" />
+	<LinearLayout
+		android:orientation = "horizontal"
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content">
+		<TextView
+			android:id = "@+id/mean"
+			style = "@style/label_style"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:textStyle = "bold"
+			android:text = "@string/zero" />
+		<TextView
+			android:id = "@+id/label13"
+			style = "@style/label_style"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:textStyle = "bold"
+			android:text = "@string/kcal" />
+		<TextView
+			android:id = "@+id/label14"
+			style = "@style/label_style"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:text = "@string/dot" />
+	</LinearLayout>
+	<LinearLayout
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "3dp"
+		android:orientation = "horizontal">
+		<ImageButton
+			android:id = "@+id/list_view_button"
+			style = "@style/button_style"
+			android:layout_width = "0dp"
+			android:layout_weight = "1"
+			android:layout_margin = "0dp"
+			android:background = "@drawable/left_black_toggle_button"
+			android:src = "@drawable/list"
+			android:contentDescription = "@string/list_view_button"
+			android:onClick = "showListView" />
+		<ImageButton
+			android:id = "@+id/graph_view_button"
+			style = "@style/button_style"
+			android:layout_width = "0dp"
+			android:layout_weight = "1"
+			android:layout_margin = "0dp"
+			android:background = "@drawable/right_black_toggle_button"
+			android:src = "@drawable/graph"
+			android:contentDescription = "@string/graph_view_button"
+			android:onClick = "showGraphView" />
+	</LinearLayout>
+	<ListView
+		android:id = "@+id/list_view"
+		android:layout_width = "fill_parent"
+		android:layout_height = "0dp"
+		android:layout_weight = "1"
+		android:cacheColorHint = "#00000000" />
+	<com.thewizardplusplus.diaryofcalories.GraphView
+		android:id = "@+id/graph_view"
+		android:layout_width = "fill_parent"
+		android:layout_height = "0dp"
+		android:layout_weight = "1"
+		android:visibility = "gone" />
+</LinearLayout>
