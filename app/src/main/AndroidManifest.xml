@@ -6,8 +6,8 @@
 	android:versionName = "1.3">
 
 	<uses-sdk
-		android:minSdkVersion = "14"
-		android:targetSdkVersion = "21" />
+		android:minSdkVersion = "7"
+		android:targetSdkVersion = "24" />
 	<uses-permission
 		android:name = "android.permission.WRITE_EXTERNAL_STORAGE" />
 
