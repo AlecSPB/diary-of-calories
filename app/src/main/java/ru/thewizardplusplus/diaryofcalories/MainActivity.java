@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import java.text.NumberFormat;
 import java.util.GregorianCalendar;

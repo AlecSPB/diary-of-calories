@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import java.util.List;
 import java.util.ArrayList;

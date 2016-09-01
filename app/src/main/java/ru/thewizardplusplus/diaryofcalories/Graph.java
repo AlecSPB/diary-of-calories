@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import java.util.Map;
 import java.util.TreeMap;

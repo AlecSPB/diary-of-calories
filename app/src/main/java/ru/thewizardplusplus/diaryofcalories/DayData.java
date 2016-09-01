@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 public class DayData {
 	public String date = new String();

@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 public class Vector2D {
 	public static Vector2D add(Vector2D vector1, Vector2D vector2) {

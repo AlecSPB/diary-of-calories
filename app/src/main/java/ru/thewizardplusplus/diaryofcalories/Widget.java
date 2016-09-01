@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

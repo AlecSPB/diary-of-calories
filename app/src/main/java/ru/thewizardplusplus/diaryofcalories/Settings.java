@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 public class Settings {
 	public static final String VIEW_MODE_SETTING_NAME = "view_mode";

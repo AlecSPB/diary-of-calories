@@ -1,4 +1,4 @@
-package com.thewizardplusplus.diaryofcalories;
+package ru.thewizardplusplus.diaryofcalories;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
